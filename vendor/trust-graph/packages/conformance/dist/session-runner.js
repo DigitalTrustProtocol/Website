@@ -1,14 +1,22 @@
 /**
  * Session suite (conformance.md § One API: the session suite): scripted
  * WebSocket sessions run against a started server. Each step sends one
- * frame and lists the frames it expects back, in order. Expectations are
- * partial (see match.ts) with three matcher objects for values a server
- * chooses: `{ "$prefix": "invalid:" }`, `{ "$type": "string" }`,
- * `{ "$any": true }`.
+ * frame and lists the frames it expects back, in order (or in any order with
+ * `unordered`). Expectations are partial (see match.ts); numbers compare
+ * within NUMBER_TOLERANCE, so `1.5e-6` and `0.0000015` are the same value.
+ * Matcher objects for values a server chooses: `{ "$prefix": "invalid:" }`,
+ * `{ "$type": "string" }`, `{ "$any": true }`, and `{ "$unordered": [...] }`
+ * for arrays whose order is implementation-local.
+ *
+ * Capability gating: a session or step may list `requires` entries. An
+ * operation name must appear in the server's `dtp.capabilities`; `fixed:Gn`
+ * holds when `dtp.gaps` does not list `Gn`. When a requirement fails, the
+ * step asserts `otherwise` if given, else it is skipped.
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { corpusDir, expandPlaceholders, loadManifest } from './corpus';
+import { NUMBER_TOLERANCE } from './match';
 export function loadSessions(dir = corpusDir) {
     const manifest = loadManifest(dir);
     return (manifest.sessions ?? []).map((file) => ({
@@ -16,10 +24,35 @@ export function loadSessions(dir = corpusDir) {
         session: expandPlaceholders(JSON.parse(readFileSync(resolve(dir, file), 'utf8'))),
     }));
 }
+export function requirementMet(requirement, features) {
+    if (requirement.startsWith('fixed:'))
+        return !(features.gaps ?? []).includes(requirement.slice('fixed:'.length));
+    return features.capabilities.includes(requirement);
+}
 function isMatcher(value) {
     return !!value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).some((k) => k.startsWith('$'));
 }
-/** Partial match with `$prefix` / `$type` / `$any` matchers. */
+/** Pairs every pattern with a distinct item (small arrays; backtracking). */
+function matchUnordered(actual, patterns, path, match) {
+    if (actual.length !== patterns.length)
+        return [`${path}: expected ${patterns.length} items, got ${actual.length}`];
+    const used = new Array(actual.length).fill(false);
+    const assign = (p) => {
+        if (p === patterns.length)
+            return true;
+        for (let a = 0; a < actual.length; a++) {
+            if (used[a] || match(actual[a], patterns[p], path).length > 0)
+                continue;
+            used[a] = true;
+            if (assign(p + 1))
+                return true;
+            used[a] = false;
+        }
+        return false;
+    };
+    return assign(0) ? [] : [`${path}: no order of ${JSON.stringify(actual).slice(0, 300)} matches the expected items`];
+}
+/** Partial match with `$prefix` / `$type` / `$any` / `$unordered` matchers. */
 export function matchFrame(actual, expected, path = '$') {
     if (isMatcher(expected)) {
         if (expected.$any === true)
@@ -33,7 +66,17 @@ export function matchFrame(actual, expected, path = '$') {
             const type = Array.isArray(actual) ? 'array' : actual === null ? 'null' : typeof actual;
             return type === expected.$type ? [] : [`${path}: expected ${expected.$type}, got ${type}`];
         }
+        if (Array.isArray(expected.$unordered)) {
+            if (!Array.isArray(actual))
+                return [`${path}: expected array`];
+            return matchUnordered(actual, expected.$unordered, path, matchFrame);
+        }
         return [`${path}: unknown matcher`];
+    }
+    if (typeof expected === 'number') {
+        return typeof actual === 'number' && Math.abs(actual - expected) <= NUMBER_TOLERANCE
+            ? []
+            : [`${path}: expected ${expected}, got ${JSON.stringify(actual)?.slice(0, 200)}`];
     }
     if (expected === null || typeof expected !== 'object') {
         return Object.is(actual, expected) ? [] : [`${path}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)?.slice(0, 200)}`];
@@ -49,7 +92,16 @@ export function matchFrame(actual, expected, path = '$') {
         return [`${path}: expected object, got ${JSON.stringify(actual)?.slice(0, 200)}`];
     return Object.entries(expected).flatMap(([key, value]) => matchFrame(actual[key], value, `${path}.${key}`));
 }
-/** Run one session against `url`; the socket's AUTH challenge is ignored. */
+const FEATURES_REQ_ID = '$features';
+function needsFeatures(session) {
+    return (session.requires?.length ?? 0) > 0 || session.steps.some((step) => (step.requires?.length ?? 0) > 0);
+}
+/**
+ * Run one session against `url`; the socket's AUTH challenge is ignored.
+ * `DTP-PUSH` frames are matched only by steps that expect one; other pushes
+ * are dropped. When the session has requirements and `features` is not
+ * given, the runner first asks the server with `info`.
+ */
 export async function runSession(url, session, options = {}) {
     const Ctor = options.WebSocket ?? globalThis.WebSocket;
     const ws = new Ctor(url);
@@ -67,22 +119,54 @@ export async function runSession(url, session, options = {}) {
         ws.addEventListener('error', () => reject(new Error(`cannot connect to ${url}`)));
     });
     const timeoutMs = options.timeoutMs ?? 5_000;
+    const collect = async (count, wantsPush) => {
+        const until = Date.now() + timeoutMs;
+        const dropPushes = () => {
+            if (wantsPush)
+                return;
+            for (let i = inbox.length - 1; i >= 0; i--)
+                if (inbox[i][0] === 'DTP-PUSH')
+                    inbox.splice(i, 1);
+        };
+        dropPushes();
+        while (inbox.length < count && Date.now() < until) {
+            await new Promise((r) => {
+                wake = r;
+                setTimeout(r, 50);
+            });
+            dropPushes();
+        }
+        return inbox.splice(0, count);
+    };
     const outcomes = [];
     try {
+        let features = options.features;
+        if (!features && needsFeatures(session)) {
+            ws.send(JSON.stringify(['DTP', FEATURES_REQ_ID, 'info', {}]));
+            const [frame] = await collect(1, false);
+            const info = frame && frame[0] === 'DTP-OK' && frame[1] === FEATURES_REQ_ID ? frame[2] : undefined;
+            if (!info || !Array.isArray(info.capabilities))
+                throw new Error(`info did not answer with capabilities: ${JSON.stringify(frame)}`);
+            features = { capabilities: info.capabilities, ...(Array.isArray(info.gaps) ? { gaps: info.gaps } : {}) };
+        }
+        const met = (requires) => (requires ?? []).every((r) => requirementMet(r, features));
+        const sessionMet = met(session.requires);
         for (const [index, step] of session.steps.entries()) {
-            ws.send(JSON.stringify(step.send));
-            const until = Date.now() + timeoutMs;
-            while (inbox.length < step.expect.length && Date.now() < until) {
-                await new Promise((r) => {
-                    wake = r;
-                    setTimeout(r, 50);
-                });
+            const base = { step: index, ...(step.note ? { note: step.note } : {}) };
+            const stepMet = sessionMet && met(step.requires);
+            const expected = stepMet ? step.expect : step.otherwise;
+            if (!expected) {
+                outcomes.push({ ...base, skipped: true, errors: [] });
+                continue;
             }
-            const got = inbox.splice(0, step.expect.length);
-            const errors = got.length < step.expect.length
-                ? [`expected ${step.expect.length} frames, got ${got.length}: ${JSON.stringify(got).slice(0, 300)}`]
-                : step.expect.flatMap((frame, i) => matchFrame(got[i], frame, `frame[${i}]`));
-            outcomes.push({ step: index, ...(step.note ? { note: step.note } : {}), errors });
+            ws.send(JSON.stringify(step.send));
+            const got = await collect(expected.length, expected.some((frame) => frame[0] === 'DTP-PUSH'));
+            const errors = got.length < expected.length
+                ? [`expected ${expected.length} frames, got ${got.length}: ${JSON.stringify(got).slice(0, 300)}`]
+                : step.unordered
+                    ? matchUnordered(got, expected, 'frames', matchFrame)
+                    : expected.flatMap((frame, i) => matchFrame(got[i], frame, `frame[${i}]`));
+            outcomes.push({ ...base, errors });
         }
     }
     finally {

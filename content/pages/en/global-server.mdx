@@ -1,0 +1,48 @@
+---
+title: Global Server
+description: A public, high-performance web-of-trust resolver for many users, fed by Sync Servers and verifiable by anyone.
+route: /global-server
+---
+
+<StatusBadge status="in-design" /> The Global Server is being specified. There is no public endpoint yet.
+
+## Why
+
+Some apps and people cannot run their own server, and some questions need a very large graph. The Global Server keeps as much of the public web of trust in memory as the machine allows and answers questions for any starting point over long-lived connections, with hard time and size limits on every walk.
+
+## What it holds
+
+Only trust statements (`32009`), ratings (`32014`), and identity claims (`10011`). Never profiles, never X account or post data. An answer depends only on public signed events.
+
+## How it is fed
+
+The resolver itself never talks to relays. **Sync Servers** crawl Nostr relays and push events into it as authenticated writers on a whitelist. Several writers can feed one resolver, and one Sync Server can feed many ([Sync Servers](/docs/global-server/sync-server)).
+
+## Access
+
+Reading is open by default. An operator can make it members-only with a whitelist (NIP-43) and standard Nostr authentication (NIP-42); later, the whitelist can come from the operator's own web of trust.
+
+## Privacy
+
+Asking a server a question tells it something. The Global Server offers three ways to use it ([privacy modes](/docs/global-server/api-privacy-operations#privacy-modes-for-clients)):
+
+| Mode | What the server learns |
+| --- | --- |
+| Query | Your starting point and the accounts or posts you ask about |
+| Field | Only your starting point; your client finishes the answer itself |
+| Frontier | Only your starting point; a Personal Server uses it to decide what to sync |
+
+For Attention, using a Global Server is opt-in and explained in its settings. A privacy policy for the public endpoint will be published here before it opens.
+
+## Verifiable, not an oracle
+
+Every answer lists the signed events it rests on, and the server returns those events on request, so any client can check the result ([verifiability](/docs/global-server/api-privacy-operations#verifiability)).
+
+## Status and self-hosting
+
+- **Public endpoint:** not available yet.
+- **Self-hosting:** planned, as two programs: the resolver and the Sync Server.
+
+## Documentation
+
+<SourceList section="global-server" />

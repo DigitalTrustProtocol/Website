@@ -41,6 +41,7 @@ X identity and post data stays in the extension.
 /protocol/wot-model            Resolver rules (dtp-wot/1)  ← TrustGraph specs/wot-model.md
 /protocol/identity-binding     X account ↔ npub binding    ← TrustGraph specs/identity-binding.md
 /protocol/conformance          Corpus and known gaps       ← TrustGraph specs/conformance.md
+/protocol/attention-nostr      How Attention uses Nostr    ← AttentionX docs/nostr-protocol.md
 /attention                     Extension product page
 /attention/privacy             Extension privacy policy    ← AttentionX docs/privacy.html
 /attention/support             FAQ and contact
@@ -49,9 +50,11 @@ X identity and post data stays in the extension.
 /global-server/privacy         Global Server privacy policy
 /docs                          Documentation home
 /docs/api                      Resolver protocol reference ← TrustGraph asyncapi/resolver.v1.yaml
-/docs/library                  Using the TrustGraph packages
-/docs/personal-server/…        Install, pair, CLI, sync    ← PersonalServer specs + guides
-/docs/global-server/…          Self-host, configure        ← GlobalServer specs + guides
+/docs/resolver-api             Resolver protocol v1        ← TrustGraph specs/resolver-api.md
+/docs/library                  Using the TrustGraph packages ← TrustGraph specs/library.md (+ guide later)
+/docs/telemetry                Admin telemetry pages       ← TrustGraph specs/telemetry.md
+/docs/personal-server/<spec>   Install, pair, CLI, sync    ← PersonalServer specs/<spec>.md + guides
+/docs/global-server/<spec>     Self-host, configure        ← GlobalServer specs/<spec>.md + guides
 /code                          Repositories, license, contributing
 /about                         Contact, team, license
 ```
@@ -181,6 +184,8 @@ The Chrome Web Store listing links to
 (AttentionX `docs/chrome-web-store.md`). That URL must keep working:
 
 1. `/attention/privacy` renders from the same source file (`docs/privacy.html`).
+   The old URL itself is served by the BrowserExtension repo's own GitHub
+   Pages site; the Website does not replace it.
 2. When the Website moves to its own domain, update the store listing, then
    turn the old URL into a redirect page (meta refresh + canonical link).
 3. Never remove the old URL while any published extension version links to it.

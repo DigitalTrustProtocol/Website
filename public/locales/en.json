@@ -1,0 +1,91 @@
+{
+  "site": {
+    "name": "Digital Trust Protocol",
+    "shortName": "DTP",
+    "tagline": "Let the people you trust decide what deserves your attention."
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "mainNav": "Main",
+    "footerNav": "Footer",
+    "home": "Digital Trust Protocol home",
+    "onThisPage": "On this page",
+    "externalLink": "(opens GitHub)"
+  },
+  "nav": {
+    "trust": "Digital trust",
+    "howItWorks": "How it works",
+    "protocol": "Protocol",
+    "attention": "Attention",
+    "personalServer": "Personal Server",
+    "globalServer": "Global Server",
+    "docs": "Docs",
+    "code": "Code",
+    "about": "About"
+  },
+  "theme": {
+    "toDark": "Switch to dark theme",
+    "toLight": "Switch to light theme"
+  },
+  "footer": {
+    "protocol": "Protocol",
+    "products": "Products",
+    "project": "Project",
+    "attentionPrivacy": "Attention privacy policy",
+    "support": "Attention support",
+    "contact": "Contact",
+    "license": "MIT licensed",
+    "sitePrivacy": "This site sets no cookies and runs no analytics or third-party scripts."
+  },
+  "status": {
+    "available": "Available",
+    "beta": "Beta",
+    "inDesign": "In design",
+    "inDevelopment": "In development",
+    "draft": "Draft",
+    "informative": "Informative",
+    "optional": "Optional",
+    "final": "Final"
+  },
+  "source": {
+    "label": "Source",
+    "edit": "Edit on GitHub",
+    "view": "View on GitHub",
+    "englishOnly": "Specifications are published in English only.",
+    "unpinned": "Local preview: read from an unpinned working tree.",
+    "missingTitle": "Not published yet",
+    "missingBody": "This document will be rendered from {{repo}} · {{path}} once that repository is public on GitHub.",
+    "policyNote": "This page is rendered from the policy file in the Attention source repository, which is the current policy."
+  },
+  "products": {
+    "whoFor": "For",
+    "learnMore": "Learn more"
+  },
+  "repos": {
+    "language": "Language",
+    "license": "License",
+    "status": "Status",
+    "open": "Open repository",
+    "notPublished": "Not public yet"
+  },
+  "cta": {
+    "addToChrome": "Add Attention to Chrome",
+    "howItWorks": "How it works",
+    "readProtocol": "Read the protocol",
+    "privacyPolicy": "Read the privacy policy"
+  },
+  "diagram": {
+    "loading": "Diagram source (rendering…)",
+    "source": "Diagram source",
+    "failed": "The diagram could not be drawn; its source is shown instead."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "There is no page at this address. It may have moved.",
+    "home": "Go to the home page",
+    "docs": "Browse the docs"
+  },
+  "error": {
+    "title": "Something went wrong"
+  }
+}

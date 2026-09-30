@@ -1,0 +1,76 @@
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--space-4);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+  color: var(--color-bg);
+}
+
+main:focus {
+  outline: none;
+}
+
+/* Theme toggle icon: show the theme you would switch to. */
+.icon-sun {
+  display: none;
+}
+
+:root[data-theme='dark'] .icon-sun {
+  display: block;
+}
+
+:root[data-theme='dark'] .icon-moon {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .icon-sun {
+    display: block;
+  }
+
+  :root:not([data-theme='light']) .icon-moon {
+    display: none;
+  }
+}
+
+/* Standard page frame for Website-authored and rendered pages. */
+.page {
+  padding-top: var(--space-7);
+}
+
+.page-header {
+  max-width: var(--width-prose);
+  margin-bottom: var(--space-6);
+}
+
+.page-header h1 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-2xl);
+}
+
+.page-lead {
+  margin: 0;
+  font-size: var(--text-lg);
+  color: var(--color-muted);
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-link);
+}
+
+.eyebrow a {
+  text-decoration: none;
+}

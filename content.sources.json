@@ -1,0 +1,246 @@
+{
+  "repos": {
+    "DigitalTrustProtocol/BrowserExtension": {
+      "label": "BrowserExtension",
+      "localDir": "../AttentionX",
+      "defaultBranch": "main"
+    },
+    "DigitalTrustProtocol/TrustGraph": {
+      "label": "TrustGraph",
+      "localDir": "../TrustGraph",
+      "defaultBranch": "main"
+    },
+    "DigitalTrustProtocol/PersonalServer": {
+      "label": "PersonalServer",
+      "localDir": "../PersonalServer",
+      "defaultBranch": "main"
+    },
+    "DigitalTrustProtocol/GlobalServer": {
+      "label": "GlobalServer",
+      "localDir": "../GlobalServer",
+      "defaultBranch": "main"
+    }
+  },
+  "sources": [
+    {
+      "id": "two-questions",
+      "repo": "DigitalTrustProtocol/BrowserExtension",
+      "path": "docs/wot-questions.md",
+      "ref": "ccd7c462240f71bf0afc9c8408a4f7f8b5aebc2f",
+      "route": "/protocol/two-questions",
+      "section": "protocol",
+      "title": "Trust vs rating: the two questions",
+      "status": "draft"
+    },
+    {
+      "id": "nip-32009",
+      "repo": "DigitalTrustProtocol/BrowserExtension",
+      "path": "docs/NIP-32009.md",
+      "ref": "ccd7c462240f71bf0afc9c8408a4f7f8b5aebc2f",
+      "route": "/protocol/nip-32009",
+      "section": "protocol",
+      "title": "NIP-32009: trust statements"
+    },
+    {
+      "id": "nip-32014",
+      "repo": "DigitalTrustProtocol/BrowserExtension",
+      "path": "docs/NIP-32014.md",
+      "ref": "ccd7c462240f71bf0afc9c8408a4f7f8b5aebc2f",
+      "route": "/protocol/nip-32014",
+      "section": "protocol",
+      "title": "NIP-32014: ratings"
+    },
+    {
+      "id": "nip-39",
+      "repo": "DigitalTrustProtocol/BrowserExtension",
+      "path": "docs/NIP-39.md",
+      "ref": "ccd7c462240f71bf0afc9c8408a4f7f8b5aebc2f",
+      "route": "/protocol/nip-39",
+      "section": "protocol",
+      "title": "NIP-39: X identity links (kind 10011)",
+      "status": "draft"
+    },
+    {
+      "id": "attention-nostr",
+      "repo": "DigitalTrustProtocol/BrowserExtension",
+      "path": "docs/nostr-protocol.md",
+      "ref": "ccd7c462240f71bf0afc9c8408a4f7f8b5aebc2f",
+      "route": "/protocol/attention-nostr",
+      "section": "protocol",
+      "title": "How Attention uses Nostr today",
+      "status": "informative"
+    },
+    {
+      "id": "wot-model",
+      "repo": "DigitalTrustProtocol/TrustGraph",
+      "path": "specs/wot-model.md",
+      "ref": "8a4c43abfabefbcb2912e57c739cb80a05747f12",
+      "route": "/protocol/wot-model",
+      "section": "protocol",
+      "title": "Resolver rules (dtp-wot/1)"
+    },
+    {
+      "id": "identity-binding",
+      "repo": "DigitalTrustProtocol/TrustGraph",
+      "path": "specs/identity-binding.md",
+      "ref": "8a4c43abfabefbcb2912e57c739cb80a05747f12",
+      "route": "/protocol/identity-binding",
+      "section": "protocol",
+      "title": "Identity binding: X account and Nostr key"
+    },
+    {
+      "id": "conformance",
+      "repo": "DigitalTrustProtocol/TrustGraph",
+      "path": "specs/conformance.md",
+      "ref": "8a4c43abfabefbcb2912e57c739cb80a05747f12",
+      "route": "/protocol/conformance",
+      "section": "protocol",
+      "title": "Conformance corpus and known gaps"
+    },
+    {
+      "id": "library",
+      "repo": "DigitalTrustProtocol/TrustGraph",
+      "path": "specs/library.md",
+      "ref": "8a4c43abfabefbcb2912e57c739cb80a05747f12",
+      "route": "/docs/library",
+      "section": "docs",
+      "title": "TrustGraph library"
+    },
+    {
+      "id": "resolver-api",
+      "repo": "DigitalTrustProtocol/TrustGraph",
+      "path": "specs/resolver-api.md",
+      "ref": "8a4c43abfabefbcb2912e57c739cb80a05747f12",
+      "route": "/docs/resolver-api",
+      "section": "docs",
+      "title": "Resolver protocol v1"
+    },
+    {
+      "id": "telemetry",
+      "repo": "DigitalTrustProtocol/TrustGraph",
+      "path": "specs/telemetry.md",
+      "ref": "8a4c43abfabefbcb2912e57c739cb80a05747f12",
+      "route": "/docs/telemetry",
+      "section": "docs",
+      "title": "Telemetry admin pages"
+    },
+    {
+      "id": "ps-architecture",
+      "repo": "DigitalTrustProtocol/PersonalServer",
+      "path": "specs/architecture.md",
+      "ref": "c81b3e7390144ea73f7da7a92b679e5b15b8c83e",
+      "route": "/docs/personal-server/architecture",
+      "section": "personal-server",
+      "title": "Personal Server: architecture"
+    },
+    {
+      "id": "ps-sync",
+      "repo": "DigitalTrustProtocol/PersonalServer",
+      "path": "specs/sync.md",
+      "ref": "c81b3e7390144ea73f7da7a92b679e5b15b8c83e",
+      "route": "/docs/personal-server/sync",
+      "section": "personal-server",
+      "title": "Personal Server: relay sync and ingest"
+    },
+    {
+      "id": "ps-security",
+      "repo": "DigitalTrustProtocol/PersonalServer",
+      "path": "specs/security.md",
+      "ref": "c81b3e7390144ea73f7da7a92b679e5b15b8c83e",
+      "route": "/docs/personal-server/security",
+      "section": "personal-server",
+      "title": "Personal Server: access and security"
+    },
+    {
+      "id": "ps-extension-integration",
+      "repo": "DigitalTrustProtocol/PersonalServer",
+      "path": "specs/extension-integration.md",
+      "ref": "c81b3e7390144ea73f7da7a92b679e5b15b8c83e",
+      "route": "/docs/personal-server/extension-integration",
+      "section": "personal-server",
+      "title": "Personal Server: connecting Attention"
+    },
+    {
+      "id": "ps-operations",
+      "repo": "DigitalTrustProtocol/PersonalServer",
+      "path": "specs/operations.md",
+      "ref": "c81b3e7390144ea73f7da7a92b679e5b15b8c83e",
+      "route": "/docs/personal-server/operations",
+      "section": "personal-server",
+      "title": "Personal Server: CLI, configuration, packaging"
+    },
+    {
+      "id": "gs-architecture",
+      "repo": "DigitalTrustProtocol/GlobalServer",
+      "path": "specs/architecture.md",
+      "ref": "b09b13045e0071af2fb84d23b4eeffb4114824cb",
+      "route": "/docs/global-server/architecture",
+      "section": "global-server",
+      "title": "Global Server: architecture"
+    },
+    {
+      "id": "gs-sync-server",
+      "repo": "DigitalTrustProtocol/GlobalServer",
+      "path": "specs/sync-server.md",
+      "ref": "b09b13045e0071af2fb84d23b4eeffb4114824cb",
+      "route": "/docs/global-server/sync-server",
+      "section": "global-server",
+      "title": "Global Server: ingest endpoint and Sync Servers"
+    },
+    {
+      "id": "gs-graph-engine",
+      "repo": "DigitalTrustProtocol/GlobalServer",
+      "path": "specs/graph-engine.md",
+      "ref": "b09b13045e0071af2fb84d23b4eeffb4114824cb",
+      "route": "/docs/global-server/graph-engine",
+      "section": "global-server",
+      "title": "Global Server: graph engine"
+    },
+    {
+      "id": "gs-resolver-engine",
+      "repo": "DigitalTrustProtocol/GlobalServer",
+      "path": "specs/resolver-engine.md",
+      "ref": "b09b13045e0071af2fb84d23b4eeffb4114824cb",
+      "route": "/docs/global-server/resolver-engine",
+      "section": "global-server",
+      "title": "Global Server: resolver engine"
+    },
+    {
+      "id": "gs-ingest-storage",
+      "repo": "DigitalTrustProtocol/GlobalServer",
+      "path": "specs/ingest-storage.md",
+      "ref": "b09b13045e0071af2fb84d23b4eeffb4114824cb",
+      "route": "/docs/global-server/ingest-storage",
+      "section": "global-server",
+      "title": "Global Server: ingest and storage"
+    },
+    {
+      "id": "gs-identity-bindings",
+      "repo": "DigitalTrustProtocol/GlobalServer",
+      "path": "specs/identity-bindings.md",
+      "ref": "b09b13045e0071af2fb84d23b4eeffb4114824cb",
+      "route": "/docs/global-server/identity-bindings",
+      "section": "global-server",
+      "title": "Global Server: identity bindings"
+    },
+    {
+      "id": "gs-api-privacy-operations",
+      "repo": "DigitalTrustProtocol/GlobalServer",
+      "path": "specs/api-privacy-operations.md",
+      "ref": "b09b13045e0071af2fb84d23b4eeffb4114824cb",
+      "route": "/docs/global-server/api-privacy-operations",
+      "section": "global-server",
+      "title": "Global Server: auth, limits, privacy, operations"
+    },
+    {
+      "id": "attention-privacy",
+      "repo": "DigitalTrustProtocol/BrowserExtension",
+      "path": "docs/privacy.html",
+      "ref": "ccd7c462240f71bf0afc9c8408a4f7f8b5aebc2f",
+      "route": "/attention/privacy",
+      "section": "attention",
+      "kind": "policy",
+      "title": "Privacy policy for Attention"
+    }
+  ]
+}

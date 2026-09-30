@@ -1,0 +1,37 @@
+---
+title: Attention support
+description: Answers to common questions about the Attention extension, and how to reach us.
+route: /attention/support
+---
+
+## Does Attention post, like, follow, or message for me?
+
+No. Attention never performs an action on your X account. It adds information to the page; everything you publish is a signed Nostr event that you confirm yourself.
+
+## What does it read on X?
+
+Only public information X has already loaded on the page, such as numeric account ids, handles, and post ids, plus your own numeric X id. It does not read direct messages or protected content, and it does not keep login tokens. Details are in the [privacy policy](/attention/privacy).
+
+## Where is my key?
+
+In an encrypted vault inside the extension (AES-256-GCM with a key derived by PBKDF2). The key stays in the extension's background worker and is cleared from memory when the vault locks. For early testing, use a dedicated key rather than your main one.
+
+## Can I try it without publishing anything?
+
+Yes. Demo mode loads a sample web of trust. What you do in demo mode stays on your device and is not sent to relays.
+
+## Why does my friend see a different answer about the same account?
+
+Because answers start from each person's own circle. You and your friend trust different people, so the evidence that reaches you can differ. Neither answer is a score of the person; each is the evidence one circle has ([how it works](/how-it-works)).
+
+## How do I take a statement back?
+
+Change it or delete it from inside Attention. That publishes a newer statement that replaces the old one. Relays decide how long they keep old events, so treat anything you publish as public.
+
+## Which languages does it support?
+
+English, Danish, German, Spanish, French, Italian, and Portuguese.
+
+## How do I report a problem?
+
+Email [attention@trust.dance](mailto:attention@trust.dance) or open an issue on [GitHub](https://github.com/DigitalTrustProtocol/BrowserExtension/issues). Please do not include your secret key or recovery words.

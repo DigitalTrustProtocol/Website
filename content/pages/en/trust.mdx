@@ -1,0 +1,47 @@
+---
+title: Digital trust
+description: Why a follow is not trust and a like is not a rating, and what it takes to let your own circle guide your attention.
+route: /trust
+---
+
+Every feed already makes a judgment about what deserves your attention. The question is whose judgment it is. Today it is usually a crowd count, tuned by the platform. Digital trust is the alternative: advice from the people **you** decided to trust, that you can inspect, and that nobody else controls.
+
+## A follow is not trust; a like is not a rating
+
+Following someone means you want to see their posts. It does not say that you would vouch for them. A like has no opposite, is not filtered by anyone you know, and does not answer the question you actually have: *is this worth my time?*
+
+The protocol therefore separates two questions. A **trust statement** says whether an identity is worth your trust. A **rating** says whether a post, page, or product is worth your time. Each has its own event kind, so neither can pretend to be the other ([the two questions](/protocol/two-questions), [why a dedicated trust kind](/protocol/nip-32009#motivation)).
+
+## Trust has a direction, a purpose, and a time
+
+Trust goes from one person to another; it is not mutual by default. It can be limited to a purpose — trusting someone about software security is different from trusting their taste in films — through an optional context ([context](/protocol/nip-32009#context-c)). And it can start and end at set times, so a temporary vouch expires by itself ([time windows](/protocol/nip-32009#time-x--y)).
+
+## Your answer, not the world's
+
+When you look at an account, the protocol walks outward from **you**: first the people you trust, then the people they trust, and so on. What comes back is your circle's evidence — *trusted*, *mixed*, *distrusted*, or *none* — together with who said what and the path that connects you. Someone else, starting from a different place, may get a different answer. That is the point: there is no universal score of a person ([results](/protocol/wot-model#71-trust-k--32009)).
+
+## Nearest evidence wins
+
+If someone you trust directly has an opinion about an account, that opinion answers the question. Opinions from people further away do not dilute it. The walk only goes further out when nobody closer has spoken ([the walk](/protocol/wot-model#6-the-trust-walk)).
+
+## Only trust opens doors
+
+A person becomes a step in your walk only when enough of the people who reached them trust them. Distrust and Neutral are recorded as evidence about someone, but they never extend your circle. A rating never does either: a five-star review of a post cannot make its author someone whose judgment you read ([ratings](/protocol/nip-32014), [hard versus soft](/protocol/two-questions#hard-vs-soft)).
+
+## Bounded walks resist fake crowds
+
+Anyone can create a thousand accounts that praise each other. They only matter to you if someone you trust trusts them. Because walks start from you, stop at a small number of steps, and run under fixed budgets, a cluster of fake accounts that nobody in your circle vouches for is simply never reached ([guardrails](/protocol/wot-model#62-guardrails)).
+
+## A server is an optimization, not an oracle
+
+The walk can run in your browser, on your own [Personal Server](/personal-server), or on a public [Global Server](/global-server). A server makes it faster; it does not decide anything you cannot check. Every answer lists the signed events it rests on, so any client can verify them ([verifiability](/docs/global-server/api-privacy-operations#verifiability)).
+
+## Privacy: who learns what
+
+Your statements are public once you publish them; that is what makes them portable. What you *look at* is private. The Attention extension keeps the X accounts and posts you see on your device ([privacy policy](/attention/privacy)). A Personal Server runs on your own machine ([security](/docs/personal-server/security)). A Global Server that answers your questions learns your root and the subjects you ask about, unless your client uses a mode that reveals only the root ([privacy modes](/docs/global-server/api-privacy-operations#privacy-modes-for-clients)).
+
+<Callout title="Next">
+
+See the walk step by step in [How it works](/how-it-works), or read the exact rules in the [resolver model](/protocol/wot-model).
+
+</Callout>

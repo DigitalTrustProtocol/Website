@@ -36,7 +36,20 @@ table changes.
 ```
 
 - `npm run content:sync` fetches every source at its `ref` into
-  `content/_imported/` (not committed; CI caches it).
+  `content/_imported/` (not committed; CI caches it). Two modes:
+  - `--local` (default, for development) reads the sibling checkouts
+    (`repos[].localDir`). A sibling that is a git repo is read at the pinned
+    ref (`git show <ref>:<path>`), so local builds match CI; a sibling without
+    git is read from its working tree, and the page footer says so.
+  - `--remote` (CI) reads `raw.githubusercontent.com` at the ref and the
+    repo's file list from the GitHub API. A repo that is not on GitHub yet is
+    skipped with a warning; its routes render a "not published yet"
+    placeholder (noindex) so links into them stay valid. A missing file in a
+    published repo fails the sync.
+- Every source of one repo is pinned to the same `ref` (validated), so links
+  to that repo's non-rendered files use one commit.
+- `npm run content:build` (run by every build) renders the synced sources and
+  enforces the build errors below.
 - A scheduled workflow opens a pull request that bumps refs and shows the diff
   of every changed source, so spec changes reach the site through review.
 
@@ -47,7 +60,8 @@ Build-time only, so readers download HTML, not a Markdown engine.
 | Step | Tool | Notes |
 | --- | --- | --- |
 | Parse | remark + `remark-gfm` | Tables, task lists |
-| Diagrams | Mermaid rendered to SVG at build time | Specs already use Mermaid (for example `wot-questions.md`) |
+| Sanitize | `rehype-raw` + `rehype-sanitize` (GitHub's allowlist) | Raw HTML in specs renders as on GitHub |
+| Diagrams | Mermaid source kept at build time; rendered to SVG in the browser, lazily, from a self-hosted chunk (decision W-D4) | Specs already use Mermaid (for example `wot-questions.md`). Build-time SVG needs a headless browser in every build. |
 | Code | Shiki | Build-time highlighting |
 | Headings | GitHub-compatible slugs | Existing anchors like `architecture.md#scope-policy-attention-on-xcom` keep working |
 | Links | Rewrite table (below) | |
@@ -61,6 +75,8 @@ Link rewriting:
 | A file that is not rendered (`../src/graph/trust/IndexResolver.ts`) | GitHub blob URL at the pinned ref |
 | External URL | Unchanged, `rel="noopener"` |
 | Unknown relative path | **Build error** |
+| Anchor that the target rendered page does not have | **Build error** |
+| Relative image | **Build error**: copy it into `public/` (no third-party hosts) |
 
 The sibling-folder links the specs use today (`../../AttentionX/docs/…`) work
 in a local checkout but not on GitHub; the rewrite table makes them work on

@@ -1,0 +1,44 @@
+---
+title: Personal Server
+description: Your own web-of-trust server on your computer or home network, shared by Attention and every other local app.
+route: /personal-server
+---
+
+<StatusBadge status="in-design" /> The Personal Server is being specified. The pages below describe the plan.
+
+## Why
+
+Attention runs its trust graph inside the browser, which can pause the extension at any moment. Every restart reloads the graph, and syncing has to stay small. A Personal Server keeps one graph warm in a normal process, syncs with Nostr relays continuously, and answers every browser profile and local app from the same place.
+
+## What it holds
+
+Only public, signed Nostr events about trust (`32009`), ratings (`32014`), and identity claims (`10011`), plus its own settings. It never holds your Nostr secret key and never sees X data: the accounts and posts you look at stay in Attention.
+
+## What it is not
+
+- Not a key holder: your key stays in Attention.
+- Not a publisher: Attention delivers your events to relays.
+- Not a service for other people: that is the [Global Server](/global-server).
+- Not a second set of rules: it runs the same TrustGraph code as the extension.
+
+## Access
+
+By default it listens only on your own machine, or on your private home network if you choose, and needs no login: it holds only public events and checks every signature. Guards still block websites and address tricks from reaching it. On a shared network you can require standard Nostr authentication (NIP-42) with a member list (NIP-43) ([security](/docs/personal-server/security)).
+
+## Install
+
+When the first release is ready, one command will set it up:
+
+```bash
+npx @dtp/personal-server init
+```
+
+## Connecting Attention
+
+Attention will offer the server as a backend in its settings. Switching between your Personal Server and a Global Server is a change of address, because both speak the same resolver protocol ([connecting Attention](/docs/personal-server/extension-integration)).
+
+## Documentation
+
+<SourceList section="personal-server" />
+
+The protocol it speaks is the [resolver protocol](/docs/resolver-api); the rules it applies are the [resolver model](/protocol/wot-model).

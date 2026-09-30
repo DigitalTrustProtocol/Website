@@ -1,0 +1,51 @@
+---
+title: Attention
+description: A Chrome extension that lets you trust people and rate posts on X, and shows your circle's judgment right where you read.
+route: /attention
+---
+
+<ButtonRow>
+  <InstallButton />
+  <ButtonLink to="/attention/privacy" variant="secondary">Read the privacy policy</ButtonLink>
+</ButtonRow>
+
+## What it does on X
+
+- **Trust people.** Mark an account as trusted, Neutral, or distrusted. On any profile you see whether your circle trusts them and how that trust reaches you.
+- **Rate posts.** One tap gives a post a rating, from *worth reading* down to *spam*, with optional labels and a short note.
+- **See your circle's judgment in place.** A small indicator next to names and posts shows the evidence from people you trust; the details and the path are a click away.
+- **Hide what misses your bar.** Optional filters keep posts from distrusted or unrated authors out of your home timeline. Filters are off until you turn them on.
+
+<Gallery>
+<Screenshot src="/screenshots/attention-account-trust.webp" alt="An X profile page for NASA with a green 'Trusted · 4°' label next to the name, added by Attention, and the same label on the pinned post." caption="Your circle's evidence next to the name: trusted, four steps away." />
+<Screenshot src="/screenshots/attention-post-rating.webp" alt="A rating popover over an X post with five stars, an optional note field, and labels from Insightful (5 stars) to Spam (0 stars)." caption="Rate a post in one tap; labels explain why." />
+<Screenshot src="/screenshots/attention-trust-path.webp" alt="A path view: from 'You' on the left through people you trust, then SpaceX, Tesla and others, to NASA on the right, with green trust lines and a few red distrust lines." caption="The path: how trust reaches an account from you." />
+<Screenshot src="/screenshots/attention-side-panel.webp" alt="The Attention side panel next to NASA's profile, in demo mode, listing who trusts and distrusts the account with short reasons." caption="Who said what, with their reasons, in the side panel." />
+<Screenshot src="/screenshots/attention-graph.webp" alt="A graph view centered on NASA with seven connected accounts, green lines for trust and a red line for distrust." caption="The neighborhood of an account as a graph." />
+<Screenshot src="/screenshots/attention-filters.webp" alt="Attention display settings beside an X timeline, with switches for on-page labels and timeline filters for trusted, mixed, distrusted, and no evidence." caption="Choose what appears on the page and what gets hidden." />
+</Gallery>
+
+## Privacy in short
+
+- Attention reads public information that X already shows on the page: numeric account ids, handles, and post ids. From the public `twid` cookie it keeps only your own numeric X id.
+- It never posts, likes, follows, deletes, or sends messages for you, and it does not search X.
+- Your Nostr key lives in an encrypted vault inside the extension and never reaches the page or any server.
+- There is no Attention server and no analytics. Data leaves your device only to the Nostr relays you choose and, for a few settings, Chrome Sync.
+
+The [full privacy policy](/attention/privacy) lists every item.
+
+## Install
+
+The Chrome Web Store listing is being prepared. Until it is public, you can build Attention from source:
+
+1. Install Node.js 22 or newer, clone [BrowserExtension](https://github.com/DigitalTrustProtocol/BrowserExtension), and run `npm install` and `npm run check`.
+2. Open `chrome://extensions`, turn on **Developer mode**, choose **Load unpacked**, and select the `dist` folder.
+3. Open `x.com` and follow the onboarding in the Attention side panel to create or import a key.
+
+## Try it with sample data
+
+Demo mode fills Attention with a sample web of trust, so you can try every feature before you publish anything. Ratings and trust you give in demo mode stay on your device.
+
+## Questions
+
+Answers to common questions are on the [support page](/attention/support). Changes are tracked in the [commit history](https://github.com/DigitalTrustProtocol/BrowserExtension/commits/main).

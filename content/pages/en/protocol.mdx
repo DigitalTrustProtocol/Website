@@ -1,0 +1,35 @@
+---
+title: Protocol
+description: The event kinds, the layers from signed event to answer, and the specifications behind them.
+route: /protocol
+---
+
+The Digital Trust Protocol is a small set of Nostr event kinds plus one shared model for reading them. Everything here is a draft: the specifications are rendered from the repositories that own them, at a pinned commit.
+
+## Kind map
+
+| Kind | Name | Answers | Specification |
+| --- | --- | --- | --- |
+| `32009` | Trust statement | Is this identity worth my trust? Trust, Neutral, distrust, or Delete. | [NIP-32009](/protocol/nip-32009) |
+| `32014` | Rating | Is this artifact worth my time? A value from 0 to 100, or Delete. | [NIP-32014](/protocol/nip-32014) |
+| `10011` | Identity claim | Which X account does this Nostr key claim? | [NIP-39](/protocol/nip-39) |
+
+Both `32009` and `32014` are addressable events: each author has one current statement per subject, and a newer one replaces the older one. Why the two kinds stay separate is explained in [the two questions](/protocol/two-questions).
+
+## Layers
+
+The resolver model splits the work into layers, so each question has one owner ([model §1](/protocol/wot-model#1-layers)):
+
+| Layer | Owns |
+| --- | --- |
+| Protocol | Checking events and choosing the current statement per slot |
+| Eligibility | Which scopes (sites) a deployment accepts |
+| Model | People and accounts, links between X accounts and keys, the walk, and results |
+| Product mapping | Which contexts and thresholds each kind of question uses |
+| Transport | The resolver protocol spoken by both servers |
+
+## Specifications
+
+<SourceList section="protocol" />
+
+For implementers, the [documentation](/docs) covers the resolver protocol, the TrustGraph library, and both servers.

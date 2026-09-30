@@ -8,7 +8,7 @@ Status: **draft** · 2026-09-30
 | --- | --- | --- |
 | UI | React 19 + TypeScript (strict) | Same as the extension |
 | Build | Vite | Same as the extension |
-| Routing and static output | React Router v7 framework mode with `prerender` for every route (decision W-D2: vs `vite-react-ssg`) | Static HTML per page for SEO and fast first paint; React where it is needed |
+| Routing and static output | React Router v7 framework mode with `prerender` for every route (decision W-D2, taken: React Router over `vite-react-ssg`). Production pages ship without router hydration: static HTML plus one small enhance script; interactive parts are React islands loaded on demand (decision W-D6) | Static HTML per page for SEO and fast first paint; React where it is needed. A hydrated router page costs ≈ 130 KB gzip, over both JavaScript budgets |
 | Content | MDX (`@mdx-js/rollup`) + the pipeline in [content-pipeline.md](content-pipeline.md) | One format for authored and imported pages |
 | i18n | `i18next` + `react-i18next`, locale JSON like the extension's `public/locales` | Shared habits and translators |
 | Styling | CSS Modules + design tokens (light / dark via `prefers-color-scheme` and a toggle) | No runtime CSS-in-JS |
@@ -23,17 +23,22 @@ as SVG files. The Website does not import extension source code.
 ```text
 Website/
   app/
-    routes/            one file per route in the sitemap
+    routes/            one file per route in the sitemap (one shared module for rendered sources)
     components/        layout, cards, badges, spec frame, playground
+    enhance/           the only up-front script in production (theme, diagrams, islands)
     styles/            tokens, globals
   content/
     pages/<locale>/    Website-authored MDX
-    _imported/         fetched sources (not committed)
+    _imported/         fetched and rendered sources (not committed)
   public/
     locales/           da, de, en, es, fr, it, pt
     brand/             SVG assets
+    screenshots/       extension screenshots (WebP)
   scripts/
-    content-sync.ts    fetch pinned sources
+    content-sync.ts    fetch pinned sources (--local | --remote)
+    content-build.ts   render sources, check links, anchors, modelVersion
+    postbuild.ts       static pages, CSP, sitemap, link check, budgets
+    preview.ts         serve build/client like GitHub Pages
   content.sources.json
   specs/               these design specs
 ```
@@ -104,6 +109,8 @@ The site practices what the protocol preaches:
 - No analytics, no cookies, no third-party trackers.
 - Fonts and scripts are self-hosted; no CDNs.
 - Strict Content Security Policy (meta tag on GitHub Pages; header when a
-  host allows it).
+  host allows it). Each page's policy lists the hashes of that page's inline
+  scripts; styles allow `'unsafe-inline'` for highlighted code and diagrams.
+- A theme choice is kept in `localStorage`, never sent anywhere.
 - Success is measured with Chrome Web Store and GitHub statistics, not with
   visitor tracking.

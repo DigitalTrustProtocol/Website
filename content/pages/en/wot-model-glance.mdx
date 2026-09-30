@@ -1,0 +1,17 @@
+---
+title: Rules at a glance
+description: A plain-language summary of the resolver rules, with links to each section of the model.
+route: /protocol/wot-model
+modelVersion: dtp-wot/1
+---
+
+- **Two questions, two kinds.** Trust statements (kind `32009`) answer *is this identity worth my trust?*; ratings (kind `32014`) answer *is this artifact worth my time?* ([§1 Layers](#1-layers))
+- **One current statement per slot.** The newest statement from an author replaces the older one; older events never come back, and a Delete keeps the slot empty. ([§2.4](#24-slot-winner))
+- **Trust has a context and a time window.** A trust question looks in its exact context, then each parent, then general trust; ratings use the exact context only. Statements count only inside their start and expiry times. ([§4.1](#41-active), [§4.2](#42-context-buckets-and-chains))
+- **A person becomes a hop when enough of your circle trusts them.** Among the people one level closer to you, their share of trust must reach your green knob (75 % by default). Neutral does not count either way. ([§5](#5-counters-and-qualification))
+- **Only trust opens doors.** Distrust and Neutral are evidence, not hops, and a rating never expands whose judgments you read. ([§6](#6-the-trust-walk))
+- **Nearest evidence wins.** The walk stops at the first degree where someone you reach has spoken about the subject; farther opinions never dilute nearer ones. ([§6](#6-the-trust-walk))
+- **The answer is yours, not a score.** A result is *trusted*, *mixed*, *distrusted*, or *none* for your root, with the evidence, the path, and the signed events behind it. ([§7.1](#71-trust-k--32009))
+- **One rating indicator.** The average rating from the nearest trusted degree becomes the single scroll indicator. ([§7.3](#73-rating-k--32014))
+- **An X account needs a binding.** Trust addressed to an X account becomes a hop only when your web of trust binds that account to a Nostr key, in lenient or strict mode. ([§2.5](#25-identity-binds))
+- **Walks are bounded and honest.** At most 7 degrees (4 by default) and fixed budgets; a walk stopped early says so instead of reporting no evidence. ([§6.2](#62-guardrails))

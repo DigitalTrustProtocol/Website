@@ -5,7 +5,8 @@ trust (`32009`) and rating (`32014`) statements work, the resolver rules,
 documentation and specs, links to the code, and the product pages for
 Attention (browser extension), Personal Server, and Global Server.
 
-Status: **design** (specs only, no code yet) · 2026-09-30
+Status: **W1 and W2 built** · 2026-09-30 — see [PLAN.md](PLAN.md) for tasks,
+decisions, and blockers, and [AGENTS.md](AGENTS.md) for commands.
 
 ## Specs
 
@@ -49,5 +50,9 @@ it, at a pinned commit, and runs the real TrustGraph code in the playground.
 | ID | Decision |
 | --- | --- |
 | W-D1 | Domain (`trust.dance`?) and host (GitHub Pages vs Cloudflare Pages) |
-| W-D2 | React Router v7 prerender vs `vite-react-ssg` |
 | W-D3 | Whether the NIP documents move from the extension repo to a dedicated protocol repo |
+
+Decided (details in [PLAN.md](PLAN.md#decisions)): W-D2 React Router v7
+prerender; W-D4 Mermaid rendered lazily in the browser; W-D5 oxlint; W-D6
+static pages without router hydration; W-D7 one pinned ref per repo; W-D8
+placeholder pages for unpublished source repos.

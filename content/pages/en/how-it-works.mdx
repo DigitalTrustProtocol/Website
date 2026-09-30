@@ -1,0 +1,46 @@
+---
+title: How it works
+description: From a signed statement to your circle's answer, step by step.
+route: /how-it-works
+---
+
+## 1. You sign statements
+
+You tell the network what you think with small signed Nostr events. A **trust statement** about a person says *trust*, *Neutral*, or *distrust*; publishing an empty one is a *Delete* that withdraws your earlier statement. A **rating** gives a post, page, or product a value from 0 to 100. Each new statement replaces your previous one about the same subject ([trust statements](/protocol/nip-32009), [ratings](/protocol/nip-32014)).
+
+## 2. Relays carry them
+
+Nostr relays store and forward the events. Relays are plain servers anyone can run; they cannot change what you said, because every event carries your signature and anyone can check it.
+
+## 3. Your walk starts from you
+
+To answer a question, the walk begins at **you** and moves outward level by level through people you trust. A person counts as a step only when their share of trust among the people who reached them meets your **green knob** — 75 % by default. Distrust and Neutral are noted but never become steps ([the walk](/protocol/wot-model#6-the-trust-walk), [qualification](/protocol/wot-model#5-counters-and-qualification)).
+
+## 4. The nearest evidence answers
+
+The walk stops at the first level where someone has spoken about the subject. That evidence becomes the answer: **trusted**, **mixed**, **distrusted**, or **none**, together with the statements and the path from you ([results](/protocol/wot-model#71-trust-k--32009)).
+
+## 5. Ratings become one indicator
+
+For a post, the average rating at the nearest trusted level becomes a single indicator while you scroll: high means your circle would spend time on it, low means skip. Who rated and why is one tap away ([one scroll indicator](/protocol/two-questions#one-scroll-indicator)).
+
+## 6. X accounts need a link to a Nostr key
+
+On X, trust points at an X account. That statement becomes a step in your walk only when your web of trust links the account to the Nostr key that controls it. There are two ways to decide that link ([identity binding](/protocol/identity-binding)):
+
+<CardGrid columns={2}>
+<Card title="Lenient">
+
+Believe the link that the nearest person in your web of trust reports. Routes can differ from person to person, because different circles may report different keys.
+
+</Card>
+<Card title="Strict">
+
+The key must also claim the X account in its own signed identity event (kind `10011`). Unverified or false links are cut, so routes converge on the key that claims the account.
+
+</Card>
+</CardGrid>
+
+## 7. The same rules everywhere
+
+The walk runs in the Attention extension, on your [Personal Server](/personal-server), or on a [Global Server](/global-server). All of them follow the same model and cite the same signed events, so any result can be checked.

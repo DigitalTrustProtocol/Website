@@ -1,0 +1,72 @@
+---
+title: Let the people you trust decide what deserves your attention
+description: The Digital Trust Protocol turns signed trust and ratings on Nostr into advice from your own circle, with no central scorer.
+route: /
+---
+
+<Hero title="Let the people you trust decide what deserves your attention.">
+
+Say whom you trust and which posts are worth your time, sign it with your own key, and see your circle's judgment right where you read. Nobody scores the world for you: every answer starts from you.
+
+<ButtonRow>
+  <InstallButton />
+  <ButtonLink to="/how-it-works" variant="secondary">How it works</ButtonLink>
+</ButtonRow>
+
+</Hero>
+
+<Section title="Two questions, kept apart" id="two-questions">
+
+A follow is not trust, and a like is not a rating. The protocol asks two separate questions, because mixing them turns crowd gestures into fake trust.
+
+<CardGrid columns={2}>
+<Question kind="32009" question="Is this identity worth my trust?">
+
+A **trust statement**: trust, Neutral, or distrust about a person or account. Only trust lets your circle grow; it decides whose judgments you read.
+
+</Question>
+<Question kind="32014" question="Is this artifact worth my time?">
+
+A **rating** from 0 to 100 for a post, page, or product. Ratings are advice from people you already trust; they never widen your circle.
+
+</Question>
+</CardGrid>
+
+<Flow steps={['You trust people', 'Your walk reaches their circle', 'Their ratings become one indicator']} />
+
+[Trust versus rating, in detail](/protocol/two-questions)
+
+</Section>
+
+<Section title="Three products, one protocol" id="products">
+
+<CardGrid>
+<ProductCard name="Attention" to="/attention" status="beta" audience="people who read X">
+
+A Chrome extension: trust people and rate posts on X, then see your circle's judgment in place and hide what misses your bar.
+
+</ProductCard>
+<ProductCard name="Personal Server" to="/personal-server" status="in-design" audience="self-hosters and local apps">
+
+Your own web-of-trust server on your computer or home network: always warm, always in sync, shared by every local app.
+
+</ProductCard>
+<ProductCard name="Global Server" to="/global-server" status="in-design" audience="apps that need answers at scale">
+
+A public, high-performance resolver that answers for any root, fed by Sync Servers that crawl Nostr relays.
+
+</ProductCard>
+</CardGrid>
+
+</Section>
+
+<Section title="Principles" id="principles">
+
+<Principles>
+<Principle title="Your judgments are yours">Signed with your key and published to Nostr relays, so they move with you between apps.</Principle>
+<Principle title="Answers are relative to you">Two people can get different answers about the same account, and both are honest.</Principle>
+<Principle title="No central scorer">Evidence comes from people you trust, with the path that led to it. Nobody ranks the world.</Principle>
+<Principle title="Servers are optional and verifiable">A server saves work; it is not an oracle. Every answer cites signed events anyone can check.</Principle>
+</Principles>
+
+</Section>

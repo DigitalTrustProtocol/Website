@@ -1,0 +1,46 @@
+---
+title: Code
+description: The repositories of the Digital Trust Protocol, their languages, licenses, and status.
+route: /code
+---
+
+All code lives in the [DigitalTrustProtocol](https://github.com/DigitalTrustProtocol) organization on GitHub and is MIT licensed.
+
+<CardGrid columns={2}>
+<RepoCard name="BrowserExtension" language="TypeScript" status="beta" published>
+
+**Attention**, the Chrome extension. Also home of the NIP drafts for kinds `32009`, `32014`, and `10011`, and of the extension's privacy policy.
+
+</RepoCard>
+<RepoCard name="TrustGraph" language="TypeScript" status="in-design">
+
+The shared web-of-trust model: the normative spec, the TypeScript library used by the extension and the Personal Server, the conformance corpus, and the resolver protocol.
+
+</RepoCard>
+<RepoCard name="PersonalServer" language="TypeScript (Node.js)" status="in-design">
+
+Your own web-of-trust server on your machine or local network, speaking the resolver protocol.
+
+</RepoCard>
+<RepoCard name="GlobalServer" language="Rust" status="in-design">
+
+The public high-performance resolver and the Sync Server that feeds it.
+
+</RepoCard>
+<RepoCard name="Website" language="TypeScript (React)" status="in-development">
+
+This site. It renders every specification from the repository that owns it, at a pinned commit.
+
+</RepoCard>
+</CardGrid>
+
+## Contributing
+
+- Specifications live with the code that implements them. Propose changes to a spec in its own repository; this site picks them up when the pinned commit is updated.
+- Each rendered page has an **Edit on GitHub** link in its footer.
+- The trust model is shared by every product. Changes to it need a conformance case and the owner's approval, so all implementations keep giving the same answer ([conformance](/protocol/conformance)).
+- Questions: [attention@trust.dance](mailto:attention@trust.dance).
+
+## License
+
+Everything here is released under the [MIT License](https://opensource.org/license/mit).

@@ -4,7 +4,6 @@
  * Context buckets are kind-prefixed; 32009 and 32014 do not share an index.
  * A peer may still hold multiple same-kind edge indexes in one bucket.
  */
-import type { Graph } from './Graph';
 import type { Identity, SubjectType } from './types';
 /** contextIndex → peerNodeIndex → edge indexes (same kind). */
 export type PeerEdgeMap = Map<number, number[]>;
@@ -24,6 +23,4 @@ export declare class Node {
     getOut(contextIndexes: number[]): IterableIterator<[number, number]>;
     addOut(contextIndex: number, subjectIndex: number, edgeIndex: number): void;
     addIn(contextIndex: number, subjectIndex: number, edgeIndex: number): void;
-    removeOut(graph: Graph, contextIndex: number, subjectIndex: number, createdAt: number, kind: number): void;
-    removeIn(graph: Graph, contextIndex: number, subjectIndex: number, createdAt: number, kind: number): void;
 }

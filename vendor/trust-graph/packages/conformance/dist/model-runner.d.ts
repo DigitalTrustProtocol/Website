@@ -5,14 +5,11 @@
  */
 import { Graph, type ITrustEvent } from '@dtp/trust-graph';
 import { SlotFloors, type GraphPathView } from '@dtp/trust-query';
-import type { CorpusOp, CorpusOwnEvidence, CorpusQuery, CorpusRecord, ModelCase } from './types';
+import type { CorpusOp, CorpusQuery, CorpusRecord, ModelCase } from './types';
 export type BindingMode = 'lenient' | 'strict';
 export interface ModelState {
     graph: Graph;
     floors: SlotFloors;
-    /** Claims are recorded but unused by today's heap (gap G8). */
-    claims: Map<string, Set<string>>;
-    own: CorpusOwnEvidence[];
     graphVersion: number;
 }
 export declare function defaultAddressKey(record: CorpusRecord): string;

@@ -74,7 +74,7 @@
       "id": "wot-model",
       "repo": "DigitalTrustProtocol/TrustGraph",
       "path": "specs/wot-model.md",
-      "ref": "027b831b9aebf28d75da79944cdbe4600706d93a",
+      "ref": "05792f06060433a8a52d8dc6d3e69a7c7b39db9f",
       "route": "/protocol/wot-model",
       "section": "protocol",
       "title": "Resolver rules (dtp-wot/1)"
@@ -83,7 +83,7 @@
       "id": "identity-binding",
       "repo": "DigitalTrustProtocol/TrustGraph",
       "path": "specs/identity-binding.md",
-      "ref": "027b831b9aebf28d75da79944cdbe4600706d93a",
+      "ref": "05792f06060433a8a52d8dc6d3e69a7c7b39db9f",
       "route": "/protocol/identity-binding",
       "section": "protocol",
       "title": "Identity binding: X account and Nostr key"
@@ -92,7 +92,7 @@
       "id": "conformance",
       "repo": "DigitalTrustProtocol/TrustGraph",
       "path": "specs/conformance.md",
-      "ref": "027b831b9aebf28d75da79944cdbe4600706d93a",
+      "ref": "05792f06060433a8a52d8dc6d3e69a7c7b39db9f",
       "route": "/protocol/conformance",
       "section": "protocol",
       "title": "Conformance corpus and known gaps"
@@ -101,7 +101,7 @@
       "id": "library",
       "repo": "DigitalTrustProtocol/TrustGraph",
       "path": "specs/library.md",
-      "ref": "027b831b9aebf28d75da79944cdbe4600706d93a",
+      "ref": "05792f06060433a8a52d8dc6d3e69a7c7b39db9f",
       "route": "/docs/library",
       "section": "docs",
       "title": "TrustGraph library"
@@ -110,7 +110,7 @@
       "id": "resolver-api",
       "repo": "DigitalTrustProtocol/TrustGraph",
       "path": "specs/resolver-api.md",
-      "ref": "027b831b9aebf28d75da79944cdbe4600706d93a",
+      "ref": "05792f06060433a8a52d8dc6d3e69a7c7b39db9f",
       "route": "/docs/resolver-api",
       "section": "docs",
       "title": "Resolver protocol v1"
@@ -119,7 +119,7 @@
       "id": "telemetry",
       "repo": "DigitalTrustProtocol/TrustGraph",
       "path": "specs/telemetry.md",
-      "ref": "027b831b9aebf28d75da79944cdbe4600706d93a",
+      "ref": "05792f06060433a8a52d8dc6d3e69a7c7b39db9f",
       "route": "/docs/telemetry",
       "section": "docs",
       "title": "Telemetry admin pages"
@@ -128,7 +128,7 @@
       "id": "ps-architecture",
       "repo": "DigitalTrustProtocol/PersonalServer",
       "path": "specs/architecture.md",
-      "ref": "141ff85fc4a18b9b9f68a20651e81558fc997556",
+      "ref": "c2a1ca3f9b42eecd85a6c9c011f07adc6e6f12b7",
       "route": "/docs/personal-server/architecture",
       "section": "personal-server",
       "title": "Personal Server: architecture"
@@ -137,7 +137,7 @@
       "id": "ps-sync",
       "repo": "DigitalTrustProtocol/PersonalServer",
       "path": "specs/sync.md",
-      "ref": "141ff85fc4a18b9b9f68a20651e81558fc997556",
+      "ref": "c2a1ca3f9b42eecd85a6c9c011f07adc6e6f12b7",
       "route": "/docs/personal-server/sync",
       "section": "personal-server",
       "title": "Personal Server: relay sync and ingest"
@@ -146,7 +146,7 @@
       "id": "ps-security",
       "repo": "DigitalTrustProtocol/PersonalServer",
       "path": "specs/security.md",
-      "ref": "141ff85fc4a18b9b9f68a20651e81558fc997556",
+      "ref": "c2a1ca3f9b42eecd85a6c9c011f07adc6e6f12b7",
       "route": "/docs/personal-server/security",
       "section": "personal-server",
       "title": "Personal Server: access and security"
@@ -155,7 +155,7 @@
       "id": "ps-extension-integration",
       "repo": "DigitalTrustProtocol/PersonalServer",
       "path": "specs/extension-integration.md",
-      "ref": "141ff85fc4a18b9b9f68a20651e81558fc997556",
+      "ref": "c2a1ca3f9b42eecd85a6c9c011f07adc6e6f12b7",
       "route": "/docs/personal-server/extension-integration",
       "section": "personal-server",
       "title": "Personal Server: connecting Attention"
@@ -164,7 +164,7 @@
       "id": "ps-operations",
       "repo": "DigitalTrustProtocol/PersonalServer",
       "path": "specs/operations.md",
-      "ref": "141ff85fc4a18b9b9f68a20651e81558fc997556",
+      "ref": "c2a1ca3f9b42eecd85a6c9c011f07adc6e6f12b7",
       "route": "/docs/personal-server/operations",
       "section": "personal-server",
       "title": "Personal Server: CLI, configuration, packaging"
@@ -173,7 +173,7 @@
       "id": "gs-architecture",
       "repo": "DigitalTrustProtocol/GlobalServer",
       "path": "specs/architecture.md",
-      "ref": "04bf64092f1d826e7280a9f951120ba5275f0ff1",
+      "ref": "0d156566a8180a757f42f6b990be578a423342bd",
       "route": "/docs/global-server/architecture",
       "section": "global-server",
       "title": "Global Server: architecture"
@@ -182,7 +182,7 @@
       "id": "gs-sync-server",
       "repo": "DigitalTrustProtocol/GlobalServer",
       "path": "specs/sync-server.md",
-      "ref": "04bf64092f1d826e7280a9f951120ba5275f0ff1",
+      "ref": "0d156566a8180a757f42f6b990be578a423342bd",
       "route": "/docs/global-server/sync-server",
       "section": "global-server",
       "title": "Global Server: ingest endpoint and Sync Servers"
@@ -191,7 +191,7 @@
       "id": "gs-graph-engine",
       "repo": "DigitalTrustProtocol/GlobalServer",
       "path": "specs/graph-engine.md",
-      "ref": "04bf64092f1d826e7280a9f951120ba5275f0ff1",
+      "ref": "0d156566a8180a757f42f6b990be578a423342bd",
       "route": "/docs/global-server/graph-engine",
       "section": "global-server",
       "title": "Global Server: graph engine"
@@ -200,7 +200,7 @@
       "id": "gs-resolver-engine",
       "repo": "DigitalTrustProtocol/GlobalServer",
       "path": "specs/resolver-engine.md",
-      "ref": "04bf64092f1d826e7280a9f951120ba5275f0ff1",
+      "ref": "0d156566a8180a757f42f6b990be578a423342bd",
       "route": "/docs/global-server/resolver-engine",
       "section": "global-server",
       "title": "Global Server: resolver engine"
@@ -209,7 +209,7 @@
       "id": "gs-ingest-storage",
       "repo": "DigitalTrustProtocol/GlobalServer",
       "path": "specs/ingest-storage.md",
-      "ref": "04bf64092f1d826e7280a9f951120ba5275f0ff1",
+      "ref": "0d156566a8180a757f42f6b990be578a423342bd",
       "route": "/docs/global-server/ingest-storage",
       "section": "global-server",
       "title": "Global Server: ingest and storage"
@@ -218,7 +218,7 @@
       "id": "gs-identity-bindings",
       "repo": "DigitalTrustProtocol/GlobalServer",
       "path": "specs/identity-bindings.md",
-      "ref": "04bf64092f1d826e7280a9f951120ba5275f0ff1",
+      "ref": "0d156566a8180a757f42f6b990be578a423342bd",
       "route": "/docs/global-server/identity-bindings",
       "section": "global-server",
       "title": "Global Server: identity bindings"
@@ -227,7 +227,7 @@
       "id": "gs-api-privacy-operations",
       "repo": "DigitalTrustProtocol/GlobalServer",
       "path": "specs/api-privacy-operations.md",
-      "ref": "04bf64092f1d826e7280a9f951120ba5275f0ff1",
+      "ref": "0d156566a8180a757f42f6b990be578a423342bd",
       "route": "/docs/global-server/api-privacy-operations",
       "section": "global-server",
       "title": "Global Server: auth, limits, privacy, operations"

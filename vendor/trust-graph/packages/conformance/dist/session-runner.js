@@ -166,7 +166,7 @@ export async function runSession(url, session, options = {}) {
                 : step.unordered
                     ? matchUnordered(got, expected, 'frames', matchFrame)
                     : expected.flatMap((frame, i) => matchFrame(got[i], frame, `frame[${i}]`));
-            outcomes.push({ ...base, errors });
+            outcomes.push({ ...base, ...(stepMet ? {} : { otherwise: true }), errors });
         }
     }
     finally {

@@ -8,7 +8,7 @@ import { WOT_MAX_DEGREE_HARD_CAP } from './shared/wot-max-degree';
 import { trustScoreResolution } from './shared/trust-score';
 import { clampFollowTrustRed, clampFollowTrustThreshold, } from './shared/wot-follow-trust-threshold';
 import { cloneLabelHints, TRUST_STATEMENT_KIND } from '@dtp/trust-protocol';
-import { trustEdgeValue } from '@dtp/trust-graph';
+import { trustEdgeValue, USER_ID_PREFIX } from '@dtp/trust-graph';
 import { DEFAULT_RESOLVE_BOUNDS, normalizeResolveBounds, } from './bounds';
 import { EMPTY_PATH_VIEW, scoresToPathView } from './path-view';
 import { trustScoreCounts } from './score-read';
@@ -100,7 +100,7 @@ export function executeTrustQuery(graph, resolver, query, graphVersion) {
     const followTrustThreshold = clampFollowTrustThreshold(query.followTrustThreshold);
     const followTrustRed = clampFollowTrustRed(query.followTrustRed, followTrustThreshold);
     const band = { red: followTrustRed, green: followTrustThreshold };
-    const scores = resolver.resolve(root, subjectId, {
+    const walk = resolver.walk(root, subjectId, {
         graph,
         trustContext: IDENTITY_TRUST_CONTEXT,
         scoreContext: context,
@@ -109,9 +109,15 @@ export function executeTrustQuery(graph, resolver, query, graphVersion) {
         followTrustThreshold,
         now,
         kind: TRUST_STATEMENT_KIND,
+        ...walkOptions(query),
     });
+    const scores = walk.scores;
+    const extras = walkExtras(walk, query.subject);
     if (scores.length === 0) {
-        return emptyResult(query, graphVersion, now, followTrustThreshold, followTrustRed);
+        return {
+            ...emptyResult(query, graphVersion, now, followTrustThreshold, followTrustRed),
+            ...extras,
+        };
     }
     const subjectScore = scores.find((s) => s instanceof TrustScore && s.subject === subjectId) ??
         scores.find((s) => s instanceof TrustScore) ??
@@ -156,5 +162,52 @@ export function executeTrustQuery(graph, resolver, query, graphVersion) {
         truncated: false,
         followTrustThreshold,
         followTrustRed,
+        ...extras,
     };
+}
+/** The query's binding mode and walk budgets as walk options. */
+export function walkOptions(query) {
+    return {
+        ...(query.bindingMode !== undefined ? { bindingMode: query.bindingMode } : {}),
+        ...(query.budgets !== undefined ? { budgets: query.budgets } : {}),
+    };
+}
+/** identity-binding.md §8 provenance for a `user:id` subject. */
+export function bindingProvenance(mode, outcome) {
+    const bind = outcome?.bind;
+    if (bind) {
+        return {
+            mode,
+            pubkey: bind.pubkey,
+            source: bind.source,
+            confirmed: bind.confirmed,
+            ...(bind.witnessEventId !== undefined ? { witnessEventId: bind.witnessEventId } : {}),
+            ...(bind.witnessLevel !== undefined ? { witnessDegree: bind.witnessLevel + 1 } : {}),
+            ...(bind.claimEventId !== undefined ? { claimEventId: bind.claimEventId } : {}),
+        };
+    }
+    return {
+        mode,
+        source: 'none',
+        confirmed: false,
+        ...(mode === 'strict' && outcome?.cut
+            ? { cutCandidate: outcome.cut.pubkey, cutReason: outcome.cut.reason }
+            : {}),
+    };
+}
+/**
+ * Result fields the walk adds: `truncated` / `truncatedReasons` /
+ * `completeDepth` only when a walk budget stopped it (§6.2), and `binding`
+ * for `user:id` subjects.
+ */
+export function walkExtras(walk, subject) {
+    return {
+        ...(walk.truncated !== undefined
+            ? { truncated: true, truncatedReasons: [walk.truncated], completeDepth: walk.completeDepth }
+            : {}),
+        ...(isUserIdSubject(subject) ? { binding: bindingProvenance(walk.mode, walk.subjectBind) } : {}),
+    };
+}
+function isUserIdSubject(subject) {
+    return subject.type === 'i' && subject.value.toLowerCase().startsWith(USER_ID_PREFIX);
 }

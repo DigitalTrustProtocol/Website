@@ -2,7 +2,8 @@
 // resolver-protocol shaping helpers.
 export { DEFAULT_GRAPH_BOUNDS, DEFAULT_RESOLVE_BOUNDS, RESOLVE_MAX_DEPTH_HARD_CAP, normalizeBounds, normalizeResolveBounds, } from './bounds';
 export { neighborhoodFromHeap, } from './graph';
-export { executeTrustQuery } from './query';
+export { bindingProvenance, executeTrustQuery, walkExtras, walkOptions } from './query';
+export { executeFieldQuery } from './field';
 export { MAX_OUTGOING_TRUST_STATEMENTS, isOutgoingUserStatement, outgoingTargetTwitterId, selectOutgoingUserStatements, toOutgoingResolvedStatement, } from './outgoing';
 export { MAX_INCOMING_TRUST_STATEMENTS, incomingSubjectKeys, isIncomingUserStatement, selectIncomingUserStatements, toIncomingResolvedStatement, } from './incoming';
 export { EMPTY_PATH_VIEW, scoresToPathView, unionPathViews, viewNodeFromHeap } from './path-view';

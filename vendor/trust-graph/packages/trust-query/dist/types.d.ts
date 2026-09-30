@@ -1,3 +1,4 @@
+import type { BindingMode, BindSource, WalkBudgets, WalkTruncation } from '@dtp/trust-graph';
 import { type FollowTrustBand } from './shared/wot-follow-trust-threshold';
 export type TrustValue = -1 | 0 | 1;
 /** Active graph evidence, including Neutral (`0`). Tombstones never enter the graph. */
@@ -97,11 +98,37 @@ export interface TrustQueryResult {
     sourceEventIds: string[];
     computedAt: number;
     graphVersion: number;
+    /** True when a walk budget stopped the walk (wot-model.md §6.2). */
     truncated: boolean;
+    /** Present with `truncated`: the walk budget that stopped it. */
+    truncatedReasons?: WalkTruncation[];
+    /** Deepest complete level; only on results a walk budget truncated. */
+    completeDepth?: number;
+    /** For `user:id` subjects: the bind the evidence was counted under. */
+    binding?: BindingProvenance;
     /** Clamped hop peer trust-score percent used for this resolve (green knob). */
     followTrustThreshold: number;
     /** Red/yellow boundary percent used for this resolve. */
     followTrustRed: number;
+}
+/** identity-binding.md §8. */
+export interface BindingProvenance {
+    mode: BindingMode;
+    pubkey?: string;
+    source: BindSource | 'none';
+    confirmed: boolean;
+    witnessEventId?: string;
+    witnessDegree?: number;
+    claimEventId?: string;
+    cutCandidate?: string;
+    cutReason?: 'no-claim' | 'false-hint';
+}
+/** Walk options shared by trust and rating queries. */
+export interface WalkQueryOptions {
+    /** Default `lenient` (decision D5). */
+    bindingMode?: BindingMode;
+    /** Node / record budgets and deadline (wot-model.md §6.2). */
+    budgets?: WalkBudgets;
 }
 /**
  * Bounds for IndexResolver / QUERY_TRUST.
@@ -124,7 +151,7 @@ export interface GraphBounds {
     /** Maximum distinct source events retained by one sync. */
     maxEvents: number;
 }
-export interface TrustQuery {
+export interface TrustQuery extends WalkQueryOptions {
     rootPubkey: string;
     subject: TrustSubject;
     context?: string;
@@ -154,7 +181,7 @@ export interface RatingClaimEvidence {
     /** Positive-p hops from the query root to the claim author (root = 0). */
     distance: number;
 }
-export interface RatingQuery {
+export interface RatingQuery extends WalkQueryOptions {
     rootPubkey: string;
     subject: TrustSubject;
     context?: string;
@@ -187,6 +214,11 @@ export interface RatingQueryResult {
     ratingEdges?: GraphPathViewEdge[];
     computedAt: number;
     graphVersion: number;
+    /** Set when a walk budget stopped the walk (wot-model.md §6.2). */
+    truncated?: true;
+    truncatedReasons?: WalkTruncation[];
+    completeDepth?: number;
+    binding?: BindingProvenance;
     /** Green knob used for rating tone (hops stay at 1). */
     followTrustThreshold: number;
     /** Red knob used for rating tone. */

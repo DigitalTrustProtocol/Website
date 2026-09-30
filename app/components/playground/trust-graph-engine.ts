@@ -49,15 +49,10 @@ function activeCase(scenario: Scenario, disabled: readonly string[]): ModelCase 
   };
 }
 
-/** Every X account (`user:id:<digits>`) the scenario mentions. */
-export function xAccountKeys(scenario: Scenario): string[] {
-  const keys = new Set<string>();
-  for (const record of scenario.records) {
-    if (record.subjectType === 'i' && record.subject.startsWith('user:id:')) keys.add(record.subject);
-  }
-  for (const claim of scenario.claims) keys.add(`user:id:${claim.twitterId}`);
-  for (const evidence of scenario.ownEvidence) keys.add(evidence.iKey);
-  return [...keys].sort();
+/** The walk's bind for an X-account subject. A pubkey subject has none on the result. */
+function bindingFromResult(subject: string, output: { binding?: { pubkey?: string } }): BindingState[] {
+  if (!output.binding || !subject.startsWith('i:')) return [];
+  return [{ iKey: subject.slice(2), pubkey: output.binding.pubkey ?? null }];
 }
 
 function engineLabel(): string {
@@ -77,10 +72,9 @@ export function createTrustGraphEngine(): PlaygroundEngine {
       const state = buildState(activeCase(scenario, query.disabled));
       const output = runTrust(state, toTrustInput(query));
       const pathView = output.pathView as PlaygroundResult['pathView'];
-      const bindings: BindingState[] = xAccountKeys(scenario).map((iKey) => ({
-        iKey,
-        pubkey: state.graph.iToP.get(iKey) ?? null,
-      }));
+      // Binds are decided inside the walk (G8), not stored on the heap.
+      // The result carries one only when the subject is an X account.
+      const bindings = bindingFromResult(query.subject, output as { binding?: { pubkey?: string } });
       return {
         resolution: output.resolution as Resolution,
         connected: output.connected as boolean,

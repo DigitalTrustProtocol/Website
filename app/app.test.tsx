@@ -183,12 +183,18 @@ describe('Playground', async () => {
     expect(markup).toContain('expected &quot;mixed&quot;, got &quot;trusted&quot;');
   });
 
-  it('shows the proposed model rule next to the heap for binding gap cases', () => {
+  it('binds inside the walk: lenient reaches the target and strict does not', () => {
     const bind = scenarios.find((scenario) => scenario.id === 'bind-03-own-bio-beats-friend-hint')!;
     const markup = html(<Playground scenarios={[bind]} engine={engine} />);
-    expect(markup).toContain('X account 1001 is bound to P');
-    expect(markup).toContain('Proposed model rule, not yet in the library (known gap): connected: true · degree: 2');
+    expect(markup).toContain('Trusted');
+    expect(markup).toContain('Same answer as corpus case bind-03-own-bio-beats-friend-hint, query 1.');
+    expect(markup).not.toContain('Proposed model rule');
     expect(markup).toContain('hint: Q');
     expect(markup).toContain('claims (kind 10011)');
+    const lenient = engine.resolve(bind, bind.presets[0]!.query);
+    const strict = engine.resolve(bind, bind.presets[1]!.query);
+    expect(lenient.connected).toBe(true);
+    expect(lenient.degree).toBe(2);
+    expect(strict.connected).toBe(false);
   });
 });

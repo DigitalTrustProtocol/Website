@@ -49,6 +49,8 @@ export interface SessionOutcome {
     note?: string;
     /** A requirement was not met and the step has no `otherwise`. */
     skipped?: boolean;
+    /** A requirement was not met and the step asserted its `otherwise` frames. */
+    otherwise?: true;
     errors: string[];
 }
 interface MinimalSocket {

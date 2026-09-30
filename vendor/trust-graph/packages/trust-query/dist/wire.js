@@ -33,8 +33,7 @@ function addReason(target, reason) {
     target.truncated = true;
     const reasons = target.truncatedReasons ?? [];
     if (!reasons.includes(reason))
-        reasons.push(reason);
-    target.truncatedReasons = reasons;
+        target.truncatedReasons = [...reasons, reason];
 }
 /** Canonical order, then cut statements and path nodes; counts stay exact. */
 export function limitTrustResult(result, limits) {

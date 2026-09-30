@@ -47,23 +47,20 @@ export function applyOp(state, op) {
         case 'remove':
             state.graph.removeTrustEvent({ addressKey: op.addressKey });
             break;
-        case 'claim': {
-            const set = state.claims.get(op.claim.pubkey) ?? new Set();
-            set.add(op.claim.twitterId);
-            state.claims.set(op.claim.pubkey, set);
+        case 'claim':
+            state.graph.addIdentityClaim(op.claim.pubkey, op.claim.twitterId, op.claim.eventId);
             break;
-        }
         case 'unclaim':
-            state.claims.delete(op.pubkey);
+            state.graph.removeIdentityClaims(op.pubkey);
             break;
         case 'own':
-            // Today's heap binds globally, for every root (gap G8).
-            state.own.push(op.evidence);
-            state.graph.bindIdentity(op.evidence.iKey, op.evidence.pubkey);
+            state.graph.bindIdentity(op.evidence.iKey, op.evidence.pubkey, {
+                root: op.evidence.root,
+                source: op.evidence.source,
+            });
             break;
         case 'unown':
-            // No unbind in today's heap (gap G6); cases using it are tagged gap:G6.
-            state.own = state.own.filter((o) => !(o.root === op.root && o.iKey === op.iKey));
+            state.graph.unbindIdentity(op.iKey, { root: op.root });
             break;
         case 'delete': {
             if (op.addressKey) {
@@ -89,8 +86,6 @@ export function buildState(testCase, ops = defaultOps(testCase)) {
     const state = {
         graph: new Graph(),
         floors: new SlotFloors(),
-        claims: new Map(),
-        own: [],
         graphVersion: 0,
     };
     for (const op of ops)
@@ -140,6 +135,10 @@ export function runTrust(state, input) {
         pathView: canonicalPathView(result.pathView),
         followTrustThreshold: result.followTrustThreshold,
         followTrustRed: result.followTrustRed,
+        truncated: result.truncated,
+        truncatedReasons: result.truncatedReasons ?? [],
+        completeDepth: result.completeDepth ?? null,
+        binding: result.binding ?? null,
     };
 }
 export function runRating(state, input) {
@@ -154,6 +153,10 @@ export function runRating(state, input) {
         averageScore: result.averageScore,
         claims: sortClaims(result.claims),
         own: result.own ?? null,
+        truncated: result.truncated === true,
+        truncatedReasons: result.truncatedReasons ?? [],
+        completeDepth: result.completeDepth ?? null,
+        binding: result.binding ?? null,
         sourceEventIds: [...result.sourceEventIds].sort(),
         pathView: view,
         ratingEdges: (result.ratingEdges ?? [])

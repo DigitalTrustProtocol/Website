@@ -83,8 +83,11 @@
     "title": "Playground",
     "loading": "Loading the playground…",
     "needsJs": "The playground needs JavaScript. The steps above describe the same walk.",
-    "engineMissing": "The walk engine is not connected yet. This playground will run the real TrustGraph code in your browser, with no network calls, once the library is published. The controls and the demo statements below are ready.",
-    "engine": "Results computed by {{label}} in your browser.",
+    "failed": "The playground could not load. The steps above describe the same walk.",
+    "engine": "Answers computed in your browser by {{label}}, with no network calls.",
+    "scenario": "Scenario (TrustGraph corpus case)",
+    "presets": "Corpus queries of this scenario",
+    "preset": "Query {{n}}",
     "root": "Start from (root)",
     "subject": "Ask about (subject)",
     "green": "Green knob: {{value}} %",
@@ -96,7 +99,7 @@
       "lenient": "Lenient",
       "strict": "Strict"
     },
-    "resultCaption": "Result for the selected root and subject",
+    "resultCaption": "Answer for {{subject}}, starting from {{root}}",
     "resolution": "Answer",
     "resolutionValue": {
       "trusted": "Trusted",
@@ -105,25 +108,49 @@
       "none": "None"
     },
     "degree": "Degree",
+    "notReached": "Not reached",
     "counts": "Evidence",
     "countsValue": "{{trust}} trust · {{distrust}} distrust · {{neutral}} Neutral",
     "evidence": "Who said it",
+    "evidenceItem": "{{author}}: {{value}} (distance {{distance}})",
     "bindings": "X accounts",
-    "bindingState": {
-      "bound": "bound",
-      "unconfirmed": "bound, unconfirmed",
-      "cut": "cut",
-      "unbound": "not bound"
-    },
-    "statementsTitle": "Demo statements ({{count}})",
+    "boundTo": "{{account}} is bound to {{pubkey}}",
+    "unbound": "{{account}} is not bound",
+    "corpus": "Corpus check",
+    "corpusMatch": "Same answer as corpus case {{id}}, query {{n}}.",
+    "corpusDiffers": "Differs from corpus case {{id}}, query {{n}}: {{details}}",
+    "corpusNone": "The controls differ from every corpus query of this scenario, so there is nothing to compare.",
+    "modelRule": "Proposed model rule, not yet in the library (known gap): {{rule}}",
+    "xAccount": "X account {{id}}",
+    "inputsTitle": "Inputs of this scenario ({{count}})",
     "use": "Use",
-    "useStatement": "Use statement {{id}}",
+    "useInput": "Use: {{author}}, {{what}}, {{about}}",
     "author": "Author",
+    "about": "About",
+    "hint": "hint: {{pubkey}}",
+    "window": "active {{from}} to {{until}}",
+    "claim": "claims (kind 10011)",
+    "own": {
+      "bio": "own evidence (Bio)",
+      "post": "own evidence (post)"
+    },
+    "ownIs": "{{account}} is {{pubkey}}",
     "value": {
       "label": "Statement",
       "trust": "trust",
       "neutral": "Neutral",
-      "distrust": "distrust"
+      "distrust": "distrust",
+      "delete": "Delete"
+    },
+    "graphSummary": "Drawing of the scenario: {{nodes}} subjects and {{links}} connections; {{path}} statements on the path of the current answer. The table lists the same answer.",
+    "legend": {
+      "trust": "trust",
+      "distrust": "distrust",
+      "neutral": "Neutral",
+      "binding": "hint, claim, or own evidence",
+      "path": "on the path of the answer",
+      "shapes": "Circles are Nostr keys, squares are X accounts.",
+      "click": "Click a subject to ask about it."
     }
   },
   "notFound": {

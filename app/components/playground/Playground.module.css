@@ -13,6 +13,135 @@
   margin-top: 0;
 }
 
+.scenario {
+  margin-bottom: var(--space-4);
+}
+
+.scenario > label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.scenario select {
+  max-width: 100%;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 400;
+}
+
+.description,
+.presetNote {
+  margin: var(--space-2) 0;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.presets legend {
+  margin-bottom: var(--space-1);
+  padding: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.presets button {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.presets button[aria-pressed='true'] {
+  border-color: var(--color-focus);
+  box-shadow: inset 0 0 0 1px var(--color-focus);
+  font-weight: 600;
+}
+
+.graph {
+  margin: var(--space-5) 0 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.legend {
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.graphSummary {
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.legend ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.swatchTrust,
+.swatchDistrust,
+.swatchNeutral,
+.swatchDashed,
+.swatchPath {
+  display: inline-block;
+  width: 1.25rem;
+  height: 0;
+  border-top: 2px solid var(--color-trusted);
+}
+
+.swatchDistrust {
+  border-top-color: var(--color-distrusted);
+}
+
+.swatchNeutral {
+  border-top-color: var(--color-none);
+}
+
+.swatchDashed {
+  border-top: 2px dashed var(--color-muted);
+}
+
+.swatchPath {
+  border-top: 4px solid var(--color-text);
+}
+
+.gap {
+  margin: var(--space-2) 0 0;
+  color: var(--color-muted);
+}
+
 .controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));

@@ -42,6 +42,41 @@ export function upfrontScripts(html: string): string[] {
   return [...urls];
 }
 
+/** One entry of a Vite build manifest (`build.manifest`). */
+export interface ManifestChunk {
+  file: string;
+  src?: string;
+  isEntry?: boolean;
+  imports?: string[];
+  dynamicImports?: string[];
+}
+
+export type BuildManifest = Record<string, ManifestChunk>;
+
+function staticClosure(manifest: BuildManifest, key: string, out = new Set<string>()): Set<string> {
+  if (out.has(key) || !manifest[key]) return out;
+  out.add(key);
+  for (const next of manifest[key].imports ?? []) staticClosure(manifest, next, out);
+  return out;
+}
+
+/**
+ * JS files a lazy island loads: its chunk plus everything it imports,
+ * statically or dynamically, minus what the up-front entry already loaded.
+ */
+export function islandFiles(manifest: BuildManifest, islandKey: string): string[] {
+  const upfront = new Set<string>();
+  for (const [key, chunk] of Object.entries(manifest)) if (chunk.isEntry) staticClosure(manifest, key, upfront);
+  const seen = new Set<string>();
+  const visit = (key: string) => {
+    if (seen.has(key) || upfront.has(key) || !manifest[key]) return;
+    seen.add(key);
+    for (const next of [...(manifest[key].imports ?? []), ...(manifest[key].dynamicImports ?? [])]) visit(next);
+  };
+  visit(islandKey);
+  return [...seen].map((key) => manifest[key]!.file).filter((file) => file.endsWith('.js'));
+}
+
 export function gzipSize(content: string | Buffer): number {
   return gzipSync(content, { level: 9 }).length;
 }

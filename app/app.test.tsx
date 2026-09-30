@@ -8,8 +8,8 @@ import { StatusBadge } from './components/content/StatusBadge';
 import { SiteHeader } from './components/layout/SiteHeader';
 import { ThemeToggle } from './components/layout/ThemeToggle';
 import { Playground } from './components/playground/Playground';
-import { DEMO_GRAPH } from './components/playground/demo-graph';
 import type { PlaygroundEngine } from './components/playground/engine';
+import { createPlayground } from './components/playground/trust-graph-engine';
 import { SourceFrame } from './components/source/SourceFrame';
 import { RulesAtAGlance } from './components/source/RulesAtAGlance';
 import type { RenderedPageData } from './content/rendered-types';
@@ -157,34 +157,38 @@ describe('SourceFrame', () => {
   });
 });
 
-describe('Playground', () => {
-  it('explains that the engine is not connected and still lists the demo statements', () => {
-    const markup = html(<Playground graph={DEMO_GRAPH} engine={null} />);
-    expect(markup).toContain('not connected yet');
-    expect(markup).toContain(`Demo statements (${DEMO_GRAPH.statements.length})`);
-    expect(markup).toContain('Green knob: 75 %');
+describe('Playground', async () => {
+  const { engine, scenarios } = await createPlayground();
+
+  it('runs the first corpus scenario with the real engine and says it matches the corpus', () => {
+    const markup = html(<Playground scenarios={scenarios} engine={engine} />);
+    expect(markup).toContain('walk-aggregates-hitting-degree');
+    expect(markup).toContain('Mixed');
+    expect(markup).toContain('2 trust · 1 distrust · 0 Neutral');
+    expect(markup).toContain('Carol: distrust (distance 1)');
+    expect(markup).toContain('Same answer as corpus case walk-aggregates-hitting-degree, query 1.');
+    expect(markup).toContain(engine.label);
+    expect(markup).toContain(`Inputs of this scenario (${scenarios[0]!.records.length})`);
+    expect(markup.match(/<option /g)?.length).toBeGreaterThan(scenarios.length);
   });
 
-  it('shows engine results as a text table', () => {
-    const engine: PlaygroundEngine = {
-      label: 'fake-engine 0.0.0',
-      resolve: (_graph, query) => ({
-        resolution: query.bindingMode === 'strict' ? 'none' : 'trusted',
-        degree: 2,
-        trust: 2,
-        distrust: 0,
-        neutral: 1,
-        evidence: [{ eventId: 's8', author: 'alice', value: 1, distance: 1 }],
-        path: [],
-        bindings: [{ xId: '1001', state: 'bound', pubkey: 'news-desk' }],
-        truncated: false,
-      }),
+  it('shows the differences when the engine disagrees with the corpus', () => {
+    const disagreeing: PlaygroundEngine = {
+      ...engine,
+      resolve: (scenario, query) => ({ ...engine.resolve(scenario, query), output: { resolution: 'trusted' } }),
+      compare: (result, expected) => engine.compare(result, expected),
     };
-    const markup = html(<Playground graph={DEMO_GRAPH} engine={engine} />);
-    expect(markup).toContain('Trusted');
-    expect(markup).toContain('2 trust · 0 distrust · 1 Neutral');
-    expect(markup).toContain('Alice: trust');
-    expect(markup).toContain('@newsdesk (X): bound');
-    expect(markup).toContain('fake-engine 0.0.0');
+    const markup = html(<Playground scenarios={scenarios} engine={disagreeing} />);
+    expect(markup).toContain('data-corpus-check="differs"');
+    expect(markup).toContain('expected &quot;mixed&quot;, got &quot;trusted&quot;');
+  });
+
+  it('shows the proposed model rule next to the heap for binding gap cases', () => {
+    const bind = scenarios.find((scenario) => scenario.id === 'bind-03-own-bio-beats-friend-hint')!;
+    const markup = html(<Playground scenarios={[bind]} engine={engine} />);
+    expect(markup).toContain('X account 1001 is bound to P');
+    expect(markup).toContain('Proposed model rule, not yet in the library (known gap): connected: true · degree: 2');
+    expect(markup).toContain('hint: Q');
+    expect(markup).toContain('claims (kind 10011)');
   });
 });

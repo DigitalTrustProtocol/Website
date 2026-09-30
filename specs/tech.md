@@ -36,9 +36,12 @@ Website/
     screenshots/       extension screenshots (WebP)
   scripts/
     content-sync.ts    fetch pinned sources (--local | --remote)
+    content-pin.ts     re-pin every repo to its sibling HEAD, re-sync, re-vendor
+    engine-vendor.ts   build vendor/trust-graph at the TrustGraph pin (--verify)
     content-build.ts   render sources, check links, anchors, modelVersion
     postbuild.ts       static pages, CSP, sitemap, link check, budgets
     preview.ts         serve build/client like GitHub Pages
+  vendor/trust-graph/  TrustGraph packages (compiled) and corpus at one commit (generated, committed)
   content.sources.json
   specs/               these design specs
 ```
@@ -50,23 +53,57 @@ Interactive demo on `/how-it-works`.
 - **Engine:** `@dtp/trust-graph` and `@dtp/trust-query` running in the
   browser, the same code as the extension and the Personal Server. The
   playground is a *client* of the model; it never re-implements the walk.
-- **Data:** a small demo graph (about 20 people, a few X accounts and posts)
-  built from the corpus `demo-chain` cases and the extension's demo WoT seed
-  (`AttentionX/docs/demo-wot.md`).
+  It builds the heap and asks its questions through the corpus runner of
+  `@dtp/conformance` (`buildState`, `runTrust`), so a playground answer and a
+  conformance run are the same call.
+- **Dependency (decision W-D9):** while the packages are unpublished, the
+  Website vendors them. `npm run engine:vendor` reads TrustGraph at one
+  commit with `git show` (never its working tree), compiles
+  `packages/{trust-graph,trust-protocol,trust-query,conformance}/src` with
+  TrustGraph's own `tsconfig.base.json`, and writes JS + declarations, the
+  package manifests, and `corpus/` byte for byte into `vendor/trust-graph/`
+  with `VENDOR.json` (commit, versions, sha256 per file). The folder is
+  committed, so local builds and CI need no TrustGraph checkout, no
+  network, and no TrustGraph build. `@dtp/*` imports resolve to it through
+  Vite aliases (`vite.aliases.ts`) and tsconfig `paths`. The vendored commit
+  follows the TrustGraph ref in `content.sources.json`; `npm run
+  content:pin` moves both, and `content:build` warns while they differ.
+  Once the packages are published, the aliases are replaced by npm
+  dependencies at the same versions and `vendor/` is deleted.
+- **Data:** scenarios are TrustGraph corpus model cases (`walk-*`,
+  `threshold-*`, `path-*`, `bind-*`; list in
+  `app/components/playground/scenarios.ts`), with their `@name`
+  placeholders shown as names. Each corpus query of a case is a preset of
+  the controls. The corpus has no `demo-chain` case yet; when it has one
+  (built from the extension's demo WoT seed, `AttentionX/docs/demo-wot.md`,
+  about 20 people, a few X accounts and posts), it joins the list.
 - **Controls:** root, subject, green knob (0–100), red knob, max degree
   (1–7), binding mode (lenient / strict), time slider (for `x` / `y`
   windows), and toggles to add or remove one statement or one `10011` claim.
 - **Output:** resolution, degree, trust / distrust / Neutral counts, the
-  evidence list, the path highlighted on the graph, and each X account's
-  binding (bound, unconfirmed, or cut with the reason).
-- **Data** also includes one X account with two competing npub hints, so the
-  two modes visibly take different routes (TrustGraph identity-binding.md §7). A results table is
-  always shown as the text alternative to the canvas.
-- **Loading:** a lazy route chunk (≤ 250 KB gzip), loaded only on this page.
+  evidence list, the path highlighted on the graph, each X account's
+  binding as the heap holds it, and a corpus check: whether the answer equals
+  the corpus expectation for the selected preset. For cases with a known gap
+  the check uses the corpus `expectCurrent` (what the library does today)
+  and shows `expectModel` (the proposed rule) beside it.
+- **Data** also includes one X account with two competing npub hints
+  (`bind-03-own-bio-beats-friend-hint`: the root's own Bio says P, a
+  friend's hint says Q). Today's heap binds the same way in both modes
+  (TrustGraph gap G8), so lenient and strict take different routes only
+  once the library closes G8; until then the proposed rule is shown next
+  to the answer. A results table is always shown as the text alternative
+  to the canvas.
+- **Loading:** a lazy island (≤ 250 KB gzip in total: island, engine with the
+  corpus scenarios, and the drawing), loaded only on this page. Postbuild
+  measures the island with everything it imports and fails over budget.
 - **No network.** A later option, "try with your npub", would query a public
   Global Server and needs explicit consent and a privacy notice.
 - **Guard:** CI runs the playground's preset scenarios and compares the
-  results with their corpus cases.
+  results with their corpus cases
+  (`app/components/playground/corpus-guard.test.ts`: every preset through
+  the page's engine and controls, compared with the corpus runner's
+  expectation choice and matcher; `vendor/trust-graph` checked against
+  `VENDOR.json`).
 
 ## Hosting and deploy
 

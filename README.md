@@ -5,7 +5,7 @@ trust (`32009`) and rating (`32014`) statements work, the resolver rules,
 documentation and specs, links to the code, and the product pages for
 Attention (browser extension), Personal Server, and Global Server.
 
-Status: **W1 and W2 built, W3 prepared** · 2026-09-30 — see [PLAN.md](PLAN.md) for tasks,
+Status: **W1, W2, and W3 built** · 2026-09-30 — see [PLAN.md](PLAN.md) for tasks,
 decisions, and blockers, and [AGENTS.md](AGENTS.md) for commands.
 
 ## Specs
@@ -27,7 +27,7 @@ flowchart LR
   web["Website"]
   ext -- "pinned docs" --> web
   tg -- "pinned specs + AsyncAPI" --> web
-  tg -- "@dtp/trust-graph (playground)" --> web
+  tg -- "@dtp/trust-graph + corpus (vendored, playground)" --> web
   ps -- "pinned specs / docs" --> web
   gs -- "pinned specs / docs" --> web
 ```
@@ -41,7 +41,7 @@ it, at a pinned commit, and runs the real TrustGraph code in the playground.
 | --- | --- |
 | W1 | Skeleton, Home, Attention page, privacy policy (URL continuity), Code page, deploy to GitHub Pages |
 | W2 | Content pipeline: NIPs, two questions, model and conformance pages rendered from source |
-| W3 | Digital trust essay, How it works, playground on `@dtp/trust-graph` (needs TrustGraph P0) |
+| W3 | Digital trust essay, How it works, playground on `@dtp/trust-graph` (vendored at a TrustGraph commit, W-D9) |
 | W4 | Docs: protocol reference from AsyncAPI, Personal Server and Global Server pages and guides |
 | W5 | Translations of authored pages into the seven locales |
 

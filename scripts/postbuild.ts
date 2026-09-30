@@ -13,13 +13,14 @@ import { existsSync, readFileSync } from 'node:fs';
 import { cp, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
 import { BASE_PATH, SITE_URL } from '../site.config';
-import { BUDGETS, gzipSize, measurePage } from './lib/budgets';
+import { BUDGETS, gzipSize, islandFiles, measurePage, type BuildManifest } from './lib/budgets';
 import { applyCsp, CSP_PLACEHOLDER, toStaticPage } from './lib/html';
 import { checkBuiltLinks } from './lib/link-check';
 
 const root = resolve(import.meta.dirname, '..');
 const outDir = join(root, 'build', 'client');
 const ENHANCE_MANIFEST = 'enhance-manifest.json';
+const PLAYGROUND_ISLAND = 'app/components/playground/island.tsx';
 
 async function listFiles(dir: string, out: string[] = []): Promise<string[]> {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -39,14 +40,14 @@ function formatKb(bytes: number): string {
   return `${(bytes / 1024).toFixed(1)} KB`;
 }
 
-async function readEnhanceEntry(): Promise<string> {
+async function readEnhanceManifest(): Promise<{ entrySrc: string; manifest: BuildManifest }> {
   const manifestPath = join(outDir, ENHANCE_MANIFEST);
   if (!existsSync(manifestPath)) throw new Error(`${ENHANCE_MANIFEST} not found; run the enhance build first`);
-  const manifest = JSON.parse(await readFile(manifestPath, 'utf8')) as Record<string, { file: string; isEntry?: boolean }>;
+  const manifest = JSON.parse(await readFile(manifestPath, 'utf8')) as BuildManifest;
   await rm(manifestPath);
   const entry = Object.values(manifest).find((chunk) => chunk.isEntry);
   if (!entry) throw new Error('enhance build has no entry chunk');
-  return `${BASE_PATH}${entry.file}`;
+  return { entrySrc: `${BASE_PATH}${entry.file}`, manifest };
 }
 
 /**
@@ -65,7 +66,7 @@ async function hoistBasePathPages(): Promise<void> {
 async function main(): Promise<void> {
   if (!existsSync(outDir)) throw new Error('build/client not found; run react-router build first');
   await hoistBasePathPages();
-  const enhanceSrc = await readEnhanceEntry();
+  const { entrySrc: enhanceSrc, manifest: enhanceManifest } = await readEnhanceManifest();
 
   // 1–2. Static pages; the 404 route becomes /404.html.
   await rename(join(outDir, '404', 'index.html'), join(outDir, '404.html'));
@@ -128,7 +129,12 @@ async function main(): Promise<void> {
     .filter((file) => file.startsWith('assets/enhance/') && file.endsWith('.js') && `${BASE_PATH}${file}` !== enhanceSrc)
     .map((file) => ({ file, gzip: gzipSize(readFileSync(join(outDir, file))) }))
     .sort((a, b) => b.gzip - a.gzip);
-  const playgroundChunk = lazyChunks.find((chunk) => chunk.file.includes('/island-'));
+  const playground = islandFiles(enhanceManifest, PLAYGROUND_ISLAND).map((file) => ({
+    file,
+    gzip: gzipSize(readFileSync(join(outDir, file))),
+  }));
+  if (playground.length === 0) throw new Error(`${PLAYGROUND_ISLAND} is not in ${ENHANCE_MANIFEST}`);
+  const playgroundTotal = playground.reduce((sum, chunk) => sum + chunk.gzip, 0);
 
   console.log(`postbuild: ${htmlFiles.length} static pages (${indexable.length} in sitemap), links OK, CSP applied`);
   for (const pageClass of ['marketing', 'docs'] as const) {
@@ -141,13 +147,23 @@ async function main(): Promise<void> {
   }
   const lazyTotal = lazyChunks.reduce((sum, chunk) => sum + chunk.gzip, 0);
   console.log(`  lazy chunks: ${lazyChunks.length}, ${formatKb(lazyTotal)} gzip in total (Mermaid, playground island)`);
-  if (playgroundChunk) console.log(`  playground island entry: ${formatKb(playgroundChunk.gzip)} gzip`);
+  console.log(
+    `  playground (island, engine, corpus scenarios, drawing): ${formatKb(playgroundTotal)} gzip in ${playground.length} chunks / budget ${formatKb(BUDGETS.lazyChunk)}`,
+  );
+  for (const chunk of [...playground].sort((a, b) => b.gzip - a.gzip)) console.log(`    ${formatKb(chunk.gzip).padStart(9)}  ${chunk.file}`);
 
-  await writeFile(join(root, 'build', 'budgets.json'), `${JSON.stringify({ pages, lazyChunks, budgets: BUDGETS }, null, 2)}\n`);
+  await writeFile(
+    join(root, 'build', 'budgets.json'),
+    `${JSON.stringify({ pages, lazyChunks, playground: { total: playgroundTotal, chunks: playground }, budgets: BUDGETS }, null, 2)}\n`,
+  );
 
   const over = pages.filter((page) => page.over);
   if (over.length > 0) {
     console.error(`JavaScript budget exceeded on: ${over.map((page) => page.route).join(', ')}`);
+    process.exitCode = 1;
+  }
+  if (playgroundTotal > BUDGETS.lazyChunk) {
+    console.error(`Playground budget exceeded: ${formatKb(playgroundTotal)} gzip > ${formatKb(BUDGETS.lazyChunk)}`);
     process.exitCode = 1;
   }
 }

@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import { BASE_PATH, SITE_ORIGIN } from './site.config.ts';
+import { aliases } from './vite.aliases.ts';
 
 /**
  * Builds app/enhance — the only script production pages load up front — plus
@@ -15,7 +16,7 @@ export default defineConfig({
     'import.meta.env.VITE_SITE_ORIGIN': JSON.stringify(SITE_ORIGIN),
   },
   resolve: {
-    alias: { '~': fileURLToPath(new URL('./app', import.meta.url)) },
+    alias: aliases,
   },
   plugins: [react()],
   publicDir: false,

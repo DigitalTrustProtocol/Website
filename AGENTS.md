@@ -18,6 +18,8 @@ hydration; `app/enhance/` is the only up-front script (decision W-D6).
 | Command | What it does |
 | --- | --- |
 | `npm run content:sync` | Fetch pinned sources from sibling checkouts (`--remote`: from GitHub, as CI does) |
+| `npm run content:pin` | Re-pin every repo to its sibling's HEAD, re-sync, and rebuild `vendor/trust-graph` (`-- --dry-run` to preview) |
+| `npm run engine:vendor` | Rebuild `vendor/trust-graph` at the TrustGraph pin (`-- --ref <commit>`; `-- --verify` checks the lock) |
 | `npm run dev` | Dev server (hydrated) |
 | `npm run build` | `content:build` → prerender → enhance bundle → postbuild (CSP, sitemap, link check, budgets) |
 | `npm run preview` | Serve `build/client` like GitHub Pages |
@@ -42,6 +44,9 @@ hydration; `app/enhance/` is the only up-front script (decision W-D6).
   loaded on demand from `app/enhance/`.
 - Never modify the sibling repos (AttentionX, TrustGraph, PersonalServer,
   GlobalServer). Copy assets into `public/` and record their source in PLAN.md.
+- The playground never walks the graph itself: it calls the vendored
+  `@dtp/trust-graph` / `@dtp/trust-query` through the corpus runner. Never
+  edit `vendor/`; regenerate it with `npm run engine:vendor` (decision W-D9).
 
 ## Layout
 
@@ -52,5 +57,6 @@ app/content/          sources config (validated), rendered-page loader (build ti
 app/enhance/          the production up-front script
 content/pages/en/     Website-authored MDX
 content/_imported/    synced and rendered sources (not committed)
-scripts/              content-sync, content-build, postbuild, preview; logic in scripts/lib
+vendor/trust-graph/   TrustGraph packages (compiled) and corpus at one commit, with VENDOR.json (generated)
+scripts/              content-sync, content-pin, engine-vendor, content-build, postbuild, preview; logic in scripts/lib
 ```

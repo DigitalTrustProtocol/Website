@@ -8,7 +8,8 @@
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import type { RenderedIndex, RenderedPage } from '../app/content/rendered-types';
-import { SOURCES_CONFIG } from '../app/content/sources';
+import { refForRepo, SOURCES_CONFIG } from '../app/content/sources';
+import { readVendorLock, TRUST_GRAPH_REPO, VENDOR_DIR } from './lib/engine-vendor';
 import { checkModelVersions, readAuthoredPages } from './lib/pages';
 import {
   checkAnchors,
@@ -66,6 +67,14 @@ async function main(): Promise<void> {
   problems.push(...checkModelVersions(authored, modelVersion));
   if (modelVersion === null && authored.some((page) => page.frontmatter.modelVersion)) {
     warnings.push('wot-model.md was not synced; modelVersion summaries are unchecked');
+  }
+
+  const engine = await readVendorLock(join(root, VENDOR_DIR));
+  const trustGraphPin = refForRepo(SOURCES_CONFIG, TRUST_GRAPH_REPO);
+  if (engine.ref !== trustGraphPin) {
+    warnings.push(
+      `playground engine is vendored at TrustGraph ${engine.ref.slice(0, 12)}, specs are pinned at ${trustGraphPin.slice(0, 12)}; \`npm run content:pin\` aligns them`,
+    );
   }
 
   for (const warning of warnings) console.warn(`warn: ${warning}`);

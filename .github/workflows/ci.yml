@@ -31,6 +31,10 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      # The playground engine is vendored (W-D9); no TrustGraph checkout is needed.
+      - name: Verify vendored engine
+        run: npm run engine:vendor -- --verify
+
       # Pinned refs are immutable, so the synced sources are cached per content.sources.json.
       - name: Restore synced sources
         id: content-cache

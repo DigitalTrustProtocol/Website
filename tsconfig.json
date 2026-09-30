@@ -5,7 +5,7 @@
     "**/.client/**/*",
     ".react-router/types/**/*"
   ],
-  "exclude": ["node_modules", "build", "content/_imported"],
+  "exclude": ["node_modules", "build", "content/_imported", "vendor", ".cache"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2023"],
     "types": ["node", "vite/client"],
@@ -15,7 +15,12 @@
     "jsx": "react-jsx",
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": ["./app/*"],
+      "@dtp/trust-graph": ["./vendor/trust-graph/packages/trust-graph/dist/main.d.ts"],
+      "@dtp/trust-protocol": ["./vendor/trust-graph/packages/trust-protocol/dist/index.d.ts"],
+      "@dtp/trust-query": ["./vendor/trust-graph/packages/trust-query/dist/index.d.ts"],
+      "@dtp/conformance/*": ["./vendor/trust-graph/packages/conformance/dist/*.d.ts"],
+      "@dtp/corpus/*": ["./vendor/trust-graph/corpus/*"]
     },
     "resolveJsonModule": true,
     "esModuleInterop": true,

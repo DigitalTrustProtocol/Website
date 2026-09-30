@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Pinned refs are immutable, so the synced sources are cached per content.sources.json.
+      - name: Restore synced sources
+        id: content-cache
+        uses: actions/cache@v4
+        with:
+          path: content/_imported
+          key: content-${{ hashFiles('content.sources.json') }}
+
+      - name: Sync sources from GitHub at their pinned refs
+        if: steps.content-cache.outputs.cache-hit != 'true'
+        run: npm run content:sync -- --remote
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test
+        run: npm test
+
+      # content:build (prebuild) fails on unknown links, missing anchors, or a modelVersion
+      # mismatch; postbuild fails on broken built links, CSP gaps, or budget overruns.
+      - name: Build
+        run: npm run build
+
+      - name: Upload preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: build/client
+          retention-days: 7

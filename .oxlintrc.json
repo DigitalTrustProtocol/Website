@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "jsx-a11y", "import", "vitest"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/no-danger": "off",
+    "import/no-unassigned-import": "off",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "off"
+  },
+  "ignorePatterns": ["build/**", ".react-router/**", "content/_imported/**", "node_modules/**"]
+}

@@ -1,0 +1,10 @@
+node_modules/
+build/
+.react-router/
+content/_imported/
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+.env
+.env.*

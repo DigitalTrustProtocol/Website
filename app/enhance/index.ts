@@ -5,7 +5,7 @@ import { initThemeToggles } from './theme-toggle';
 /**
  * The only script the production site loads up front (decision W-D6).
  * Pages are static HTML without router hydration; this adds the few
- * behaviors they need.
+ * behaviors they need and mounts React islands on demand.
  */
 
 function initDiagrams(): void {
@@ -23,9 +23,18 @@ function initDiagrams(): void {
   }
 }
 
+function initIslands(): void {
+  const playground = document.getElementById('playground-root');
+  if (playground && !playground.dataset.mounted) {
+    playground.dataset.mounted = 'true';
+    void import('~/components/playground/island').then(({ mountPlayground }) => mountPlayground(playground));
+  }
+}
+
 export function enhance(): void {
   initThemeToggles();
   initDiagrams();
+  initIslands();
 }
 
 if (typeof document !== 'undefined' && !import.meta.env.DEV) {

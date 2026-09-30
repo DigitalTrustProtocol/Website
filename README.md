@@ -5,7 +5,7 @@ trust (`32009`) and rating (`32014`) statements work, the resolver rules,
 documentation and specs, links to the code, and the product pages for
 Attention (browser extension), Personal Server, and Global Server.
 
-Status: **W1 and W2 built** · 2026-09-30 — see [PLAN.md](PLAN.md) for tasks,
+Status: **W1 and W2 built, W3 prepared** · 2026-09-30 — see [PLAN.md](PLAN.md) for tasks,
 decisions, and blockers, and [AGENTS.md](AGENTS.md) for commands.
 
 ## Specs

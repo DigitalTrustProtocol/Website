@@ -7,6 +7,9 @@ import en from '../public/locales/en.json';
 import { StatusBadge } from './components/content/StatusBadge';
 import { SiteHeader } from './components/layout/SiteHeader';
 import { ThemeToggle } from './components/layout/ThemeToggle';
+import { Playground } from './components/playground/Playground';
+import { DEMO_GRAPH } from './components/playground/demo-graph';
+import type { PlaygroundEngine } from './components/playground/engine';
 import { SourceFrame } from './components/source/SourceFrame';
 import { RulesAtAGlance } from './components/source/RulesAtAGlance';
 import type { RenderedPageData } from './content/rendered-types';
@@ -151,5 +154,37 @@ describe('SourceFrame', () => {
     expect(markup).toContain('Rules at a glance');
     expect(markup).toContain('dtp-wot/1');
     expect(markup).toContain('href="#6-the-trust-walk"');
+  });
+});
+
+describe('Playground', () => {
+  it('explains that the engine is not connected and still lists the demo statements', () => {
+    const markup = html(<Playground graph={DEMO_GRAPH} engine={null} />);
+    expect(markup).toContain('not connected yet');
+    expect(markup).toContain(`Demo statements (${DEMO_GRAPH.statements.length})`);
+    expect(markup).toContain('Green knob: 75 %');
+  });
+
+  it('shows engine results as a text table', () => {
+    const engine: PlaygroundEngine = {
+      label: 'fake-engine 0.0.0',
+      resolve: (_graph, query) => ({
+        resolution: query.bindingMode === 'strict' ? 'none' : 'trusted',
+        degree: 2,
+        trust: 2,
+        distrust: 0,
+        neutral: 1,
+        evidence: [{ eventId: 's8', author: 'alice', value: 1, distance: 1 }],
+        path: [],
+        bindings: [{ xId: '1001', state: 'bound', pubkey: 'news-desk' }],
+        truncated: false,
+      }),
+    };
+    const markup = html(<Playground graph={DEMO_GRAPH} engine={engine} />);
+    expect(markup).toContain('Trusted');
+    expect(markup).toContain('2 trust · 0 distrust · 1 Neutral');
+    expect(markup).toContain('Alice: trust');
+    expect(markup).toContain('@newsdesk (X): bound');
+    expect(markup).toContain('fake-engine 0.0.0');
   });
 });

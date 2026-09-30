@@ -79,6 +79,53 @@
     "source": "Diagram source",
     "failed": "The diagram could not be drawn; its source is shown instead."
   },
+  "playground": {
+    "title": "Playground",
+    "loading": "Loading the playground…",
+    "needsJs": "The playground needs JavaScript. The steps above describe the same walk.",
+    "engineMissing": "The walk engine is not connected yet. This playground will run the real TrustGraph code in your browser, with no network calls, once the library is published. The controls and the demo statements below are ready.",
+    "engine": "Results computed by {{label}} in your browser.",
+    "root": "Start from (root)",
+    "subject": "Ask about (subject)",
+    "green": "Green knob: {{value}} %",
+    "red": "Red knob: {{value}} %",
+    "maxDegree": "Max degree: {{value}}",
+    "time": "Time: {{value}}",
+    "bindingMode": "X account binding",
+    "mode": {
+      "lenient": "Lenient",
+      "strict": "Strict"
+    },
+    "resultCaption": "Result for the selected root and subject",
+    "resolution": "Answer",
+    "resolutionValue": {
+      "trusted": "Trusted",
+      "mixed": "Mixed",
+      "distrusted": "Distrusted",
+      "none": "None"
+    },
+    "degree": "Degree",
+    "counts": "Evidence",
+    "countsValue": "{{trust}} trust · {{distrust}} distrust · {{neutral}} Neutral",
+    "evidence": "Who said it",
+    "bindings": "X accounts",
+    "bindingState": {
+      "bound": "bound",
+      "unconfirmed": "bound, unconfirmed",
+      "cut": "cut",
+      "unbound": "not bound"
+    },
+    "statementsTitle": "Demo statements ({{count}})",
+    "use": "Use",
+    "useStatement": "Use statement {{id}}",
+    "author": "Author",
+    "value": {
+      "label": "Statement",
+      "trust": "trust",
+      "neutral": "Neutral",
+      "distrust": "distrust"
+    }
+  },
   "notFound": {
     "title": "Page not found",
     "body": "There is no page at this address. It may have moved.",

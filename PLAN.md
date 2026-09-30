@@ -1,6 +1,6 @@
 # Website — implementation plan
 
-Status: **W1 and W2 built** · 2026-09-30
+Status: **W1 and W2 built, W3 prepared** · 2026-09-30
 
 Source of truth: [README.md](README.md) (increments, open decisions) and
 [specs/](specs/) ([site.md](specs/site.md), [content-pipeline.md](specs/content-pipeline.md),
@@ -15,7 +15,7 @@ into that spec.
 | Repo infrastructure (git, license, CI, deploy workflow, agent guide) | Done |
 | W1 Skeleton and product pages | Done, except the GitHub Pages deploy itself (workflow written, not run) |
 | W2 Content pipeline | Done, except the scheduled ref-bump PR and the weekly external link check |
-| W3 Digital trust essay, How it works, playground | Essay and How it works text done; playground shell next; engine blocked on `@dtp/trust-graph` |
+| W3 Digital trust essay, How it works, playground | Essay and How it works text done; playground shell done; engine blocked on `@dtp/trust-graph` |
 | W4 Docs: API reference, server guides | Not started (the server specs are already rendered under `/docs`) |
 | W5 Translations | Not started (i18n structure in place) |
 
@@ -87,7 +87,7 @@ build with link check, CSP, and budgets) must pass before every commit.
 
 - [x] `/trust` essay (every key message from site.md, each linked to its spec section).
 - [x] `/how-it-works` steps 1–7, including lenient and strict binding side by side.
-- [ ] Playground shell: controls (root, subject, green and red knobs, max degree, time, binding mode, statement toggles), results table as text alternative, demo-graph types shaped like model records, React island in a lazy chunk (84 KB gzip, budget 250 KB), no network calls.
+- [x] Playground shell: controls (root, subject, green and red knobs, max degree, time, binding mode, statement toggles), results table as text alternative, demo-graph types shaped like model records, React island in a lazy chunk (84 KB gzip, budget 250 KB), no network calls.
   *Check:* `app/app.test.tsx` renders it with no engine and with a fake engine.
 - [ ] **Engine:** implement `trust-graph-engine.ts` over `@dtp/trust-graph` / `@dtp/trust-query` and return it from `loadEngine()` in `app/components/playground/engine.ts`. *Blocked:* TrustGraph P0 packages.
 - [ ] Demo graph from the corpus `demo-chain` cases and `AttentionX/docs/demo-wot.md`, including one X account with two competing npub hints (the provisional graph has this shape).
